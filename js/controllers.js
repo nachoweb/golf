@@ -1,5 +1,5 @@
 'use strict';
-
+var ctrlMod = angular.module('ctrlMod', []);
 /* Utilities */
 function imp(something){
 	document.write('<p>' + something + '</p>');
@@ -41,9 +41,9 @@ function printMatrix(matrix){
  * Módulo que contiene a los controladores
  * @type {module}
  */
-var ctrl = angular.module('ControlModule', [$scope]);
 
-ctrl.controller('MainControl', [$scope, ResourceTests, $location, $http, LoginService,
+
+ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$http', 'LoginService',
     /* Main Controller
      Utiliza el objeto ResourceTests que es un recurso para comunicarnos con el servidor sin hacer
      del servicio $http de Angular
@@ -282,7 +282,7 @@ ctrl.controller('MainControl', [$scope, ResourceTests, $location, $http, LoginSe
     }
 ]);
 
-ctrl.controller('BoardControl', [$scope, $routeParams, $http, ResourceTests, LoginService,
+ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'ResourceTests', 'LoginService',
     /*
      Board Controller
      data es un objeto heredado del scope de MainControl (padre)
@@ -459,7 +459,7 @@ ctrl.controller('BoardControl', [$scope, $routeParams, $http, ResourceTests, Log
 ]);
 
 
-ctrl.controller('EstadisticasControl', [$scope. LoginService,
+ctrlMod.controller('EstadisticasControl', ['$scope', 'LoginService',
 /**
  * Controlador para la ventana de estadísticas globales
  * @constructor
@@ -473,7 +473,7 @@ function EstadisticasControl($scope, LoginService){
 ]);
 
 
-ctrl.controller('LoginControl', [$scope, $location, LoginService,
+ctrlMod.controller('LoginControl', ['$scope', '$location', 'LoginService',
 /**
  * Controlador para la página de login
  */

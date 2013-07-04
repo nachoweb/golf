@@ -1,6 +1,6 @@
-var app=angular.module('golfModule');
+var serv=angular.module('servMod',[]);
 
- app.factory("NUEVOtest",function(){
+serv.factory("NUEVOtest",function(){
     var dim = 20;
     // Create de matrix golf and asign to scope.
     var datos = Array.matrix(dim,dim,0);
@@ -8,7 +8,7 @@ var app=angular.module('golfModule');
     return datos;
 });
 
-app.factory('ResourceTests',function($http){
+serv.factory('ResourceTests',['$http',function($http){
 
     function MmongolabResourceFactory(collectionName) {
         console.log("Creando servicio ResourceTests")
@@ -155,12 +155,12 @@ app.factory('ResourceTests',function($http){
     }
     var Resour=MmongolabResourceFactory("trainner");
     return Resour;
- });
+ }]);
 
 /**
  * Servicio para mantener un objeto que contiene el usuario y contraseña
  */
-app.factory('LoginService',function(){
+serv.factory('LoginService',function(){
     console.log("Creando servicio LoginService")
     var Service = {};
     Service.username = "";
