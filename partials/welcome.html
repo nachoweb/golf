@@ -1,0 +1,18 @@
+<div ng-include src="'partials/tests.html'" class="span3"></div>
+<!-- Global Statistics Container -->
+<div class="span9">
+    <div class="zone">
+
+        <h3> Estadísticas Globales </h3>
+
+        <ul class="lista_estadisticas">
+            <li><p><img src='./img/flag21x21.png'> <font size='5px'>{{data[numTest].statistics.goals}}</font></p></li>
+            <li><p> < 1 unidades: <font size='3px'>{{data[numTest].statistics.less1metter}}</font></p></li>
+
+
+            <li><p> Entre 1 y 5 unidades: <font size='3px'>{{data[numTest].statistics.between1and5metters}}</font></p>
+            </li>
+            <li><p> > 5 unidades: <font size='3px'>{{data[numTest].statistics.more5metters}}</font></p></li>
+        </ul>
+    </div>
+</div>

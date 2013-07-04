@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <p>{{ username }} <a style="padding-left:20px" ng-href="#/"> <i class="icon-off"></i> Cerrar sesión </a></p>
+    <!-- Left container (Side Bar) -->
+    <div id="sidebar" ng-hide="isError">
+
+        <!-- Test Table -->
+        <h3>Tests </h3>
+        Buscar
+        <input ng-model="query" class="ng-valid ng-dirty">
+        <ul id="listaTests">
+            <li id="test" ng-repeat="(index, test) in data | filter:query">
+                <a ng-href="#/test/{{index}}"
+                   ng-class="{testNoTerminado:noTerminado(index), testBorrado:borrado(index)}">
+                    <font size='3px'>{{test.name}} {{test.date}} </font>
+                </a>
+                <i ng-show="activo(index)" class="icon-eye-open icon-black"></i>
+            </li>
+        </ul>
+
+        <a ng-click="nuevoTest()">
+            <button class="btn btn-primary btn-large">
+                <i class="icon-plus icon-white"></i>
+                Crear Nuevo Test
+            </button>
+        </a>
+    </div>
+</div>
