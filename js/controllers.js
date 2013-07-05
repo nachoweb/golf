@@ -42,7 +42,6 @@ function printMatrix(matrix){
  * @type {module}
  */
 
-
 ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$http', 'LoginService',
     /* Main Controller
      Utiliza el objeto ResourceTests que es un recurso para comunicarnos con el servidor sin hacer
