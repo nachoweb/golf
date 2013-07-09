@@ -172,7 +172,6 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
                     $scope.data.splice(aux,1);
                 }
 
-                // Copia local
                 $scope.dataServer = angular.copy($scope.data);
 
                 alert("Test eliminado");

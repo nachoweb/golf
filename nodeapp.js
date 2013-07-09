@@ -34,7 +34,7 @@ app.testSchema = mongoose.Schema({
 // Modelo
 app.Test = mongoose.model('Test', app.testSchema);
 
-// Autenticación
+// Basic Autenticación
 /*app.use(express.basicAuth(function(user, pass) {
     return user === 'javi' && pass === 'javi';
 }));*/
