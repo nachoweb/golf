@@ -1,27 +1,28 @@
-var serv=angular.module('servMod',[]);
+var serv=angular.module('servMod',['ngResource']);
 
-serv.factory("NUEVOtest",function(){
-    var dim = 20;
-    // Create de matrix golf and asign to scope.
-    var datos = Array.matrix(dim,dim,0);
-
-    return datos;
+serv.factory('ResourceTests', function($resource) {
+//    var Res=$resource('http://localhost:2700/res', { salvarVarios:{ method:'POST',isArray:true }});
+    var Res=$resource('http://localhost\\:2700/rest',{"id": "@_id"}, { update: {method: 'PUT'}});
+    return Res;
 });
 
+/*
 serv.factory('ResourceTests',['$http',function($http){
 
     function MmongolabResourceFactory(collectionName) {
         console.log("Creando servicio ResourceTests")
         var config = {
-            BASE_URL : 'https://api.mongolab.com/api/1/databases/',
-            API_KEY:  '51069a2be4b01e6f7259b79e', DB_NAME: 'golf'
+//            BASE_URL : 'https://api.mongolab.com/api/1/databases/',
+            BASE_URL : 'http://localhost:2700/rest',
+//            API_KEY:  '51069a2be4b01e6f7259b79e', DB_NAME: 'golf'
+            API_KEY:  '51069a2be4b01e6f7259b79e', DB_NAME: 'tests'
         };
 
         var dbUrl = config.BASE_URL + config.DB_NAME;
         var collectionUrl = dbUrl + '/collections/' + collectionName;
         var defaultParams = {apiKey:config.API_KEY};
 
-        var resourceRespTransform = function(data) {
+        var resourceRespTransform = function(data){
             return new Resource(data);
         };
 
@@ -156,6 +157,7 @@ serv.factory('ResourceTests',['$http',function($http){
     var Resour=MmongolabResourceFactory("trainner");
     return Resour;
  }]);
+*/
 
 /**
  * Servicio para mantener un objeto que contiene el usuario y contraseña

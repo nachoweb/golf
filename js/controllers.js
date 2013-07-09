@@ -62,7 +62,8 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
         /* Pedir lo datos al servidor
          * Los datos se obtienen de forma ordenada por fecha
          */
-        ResourceTests.all({ sort: {fecha: -1} }, function (data){
+//        ResourceTests.all({ sort: {fecha: -1} }, function (data){
+        ResourceTests.query(function (data){
             $scope.data=data;
             console.log('Tests descargados del servidor: ', $scope.data);
 
@@ -109,17 +110,21 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
             return true;
         }
 
-        /*
-         Función para eliminar el test actual de la aplicación
+
+        /**
+         * Eliminar el test actual
          */
         $scope.borrar = function(){
             if (confirm("¿Está seguro de que desea borrar el test?")) {
 
+                console.log("Test a eliminar: " + $scope.data[$scope.numTest])
+
                 // Eliminar del servidor
                 $scope.data[$scope.numTest].$remove(function(){
+
+                    // No consigo que se ejecute
                     console.log('Test eliminado del servidor:', $scope.data[$scope.numTest]);
                 });
-
 
                 // Si solo queda un test
                 if($scope.data.length - 1 == 0){
@@ -154,9 +159,10 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
                     angular.extend($scope.data[$scope.numTest],testData);
 
                     // Actualizar en el servidor
-                    $scope.data[$scope.numTest].$update(function(){
-                        console.log("Test actualizado en el servidor: ", $scope.data[$scope.numTest]);
-                    });
+                    /*$scope.data[$scope.numTest].$update(function(){
+                     console.log("Test actualizado en el servidor: ", $scope.data[$scope.numTest]);
+                     });*/
+                    $scope.data[$scope.numTest].$update();
 
                 }else{
                     var aux = $scope.numTest;
@@ -168,7 +174,6 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
 
                 // Copia local
                 $scope.dataServer = angular.copy($scope.data);
-                console.log("dataSever modificado");
 
                 alert("Test eliminado");
             }
@@ -211,22 +216,31 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
             return $scope.mostrar_campo;
         }
 
+        /**
+         * Terminar y enviar al servidor el test actual
+         */
         $scope.terminarTestActual = function(){
+
             if (confirm("¿Está seguro de que desea terminar el test? Después no podrá ser modificado.")) {
+
                 $scope.data[$scope.numTest].estado = 'terminado';
-
                 $scope.data[$scope.numTest].$update(function(){
-                    console.log('Test actualizado en el servidor:',  $scope.data[$scope.numTest]);
 
-                    // Actualizar copia local
+                    // No consigo que se ejecute esta función de callback
+                    console.log('Test actualizado en el servidor:',  $scope.data[$scope.numTest]);
                     $scope.dataServer[$scope.numTest] = angular.copy($scope.data[$scope.numTest]);
                 });
+
+                console.log('Test actualizado en el servidor:',  $scope.data[$scope.numTest]);
+                $scope.dataServer[$scope.numTest] = angular.copy($scope.data[$scope.numTest]);
             }
         }
+
 
         $scope.setNumTest = function(numTest){
             $scope.numTest = numTest;
         }
+
 
         /**
          * Crear un nuevo test
@@ -444,15 +458,16 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
         }
 
         $scope.guardarCambios = function(){
-            $scope.data[$scope.numTest].$update(
-                function(){
-                    console.log('Test actualizado', $scope.data[$scope.numTest])
+            // Enviar petición PUT
+            $scope.data[$scope.numTest].$update({}, function(){
 
-                    // Actualizar copia del servidor
-                    $scope.dataServer[$scope.numTest] = angular.copy($scope.data[$scope.numTest]);
-                }
+                // No consigo que se ejecute
+                console.log('Test actualizado en el servidor:',  $scope.data[$scope.numTest]);
+                $scope.dataServer[$scope.numTest] = angular.copy($scope.data[$scope.numTest]);
+            }, {});
 
-            );
+            console.log('Test enviado al servidor:',  $scope.data[$scope.numTest]);
+            $scope.dataServer[$scope.numTest] = angular.copy($scope.data[$scope.numTest]);
         }
     }
 ]);
