@@ -19,6 +19,11 @@ serv.factory('LoginService',function(){
         this.username = u;
         this.password = p;
     }
+
+    Service.setUsername = function(newName){
+        this.username = newName;
+    }
+
     Service.getUsername = function(){
         return this.username;
     }

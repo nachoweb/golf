@@ -1,0 +1,35 @@
+<div class="vista">
+<div ng-include src="'../public/partials/tests.html'" class="span3"></div>
+<!-- Global Statistics Container -->
+<div class="span9">
+
+    <!-- Cuadro de estadísticas -->
+    <div id="cuadro_estadisticas" class="row-fluid">
+        <div class="span12">
+            <p class="titulo">Estadísticas globales</p>
+
+            <div class="row-fluid">
+                <div class="span4 medida">
+                    <img src='../public/img/flag21x21.png'>
+
+                    <div class="row-fluid">
+                        <div class="span12 valor">{{data[numTest].statistics.goals}}</div>
+                    </div>
+                </div>
+                <div class="span4 medida">
+                    Entre 1 y 5 unid.
+                    <div class="row-fluid">
+                        <div class="span12 valor">{{data[numTest].statistics.between1and5metters}}</div>
+                    </div>
+                </div>
+                <div class="span4 medida">
+                    + 5 unid.
+                    <div class="row-fluid">
+                        <div class="span12 valor">{{data[numTest].statistics.more5metters}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

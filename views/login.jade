@@ -1,0 +1,26 @@
+!!! 5
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Golf App
+    link(rel='stylesheet', href='../public/css/app.css')
+    link(rel='stylesheet', href='../public/css/bootstrap.css')
+    body
+        - var hola="Hola "+name
+
+        .row-fluid
+            .span4
+            .zone.span4
+                form(action='/login',method='post')
+                    h3 #{error_msg}
+                    table#login_table
+                        tr
+                            td Nombre de Usuario
+                            td: input(type='text',name='username')
+                        tr
+                            td Contraseña
+                            td: input(name='password',type='password',value='',placeholder='')
+                    input(type='submit',value='Entrar',data-transition='fade', class="btn-large")
+                       | Entrar
+                       i.icon-chevron-right.icon-white
+            .span4

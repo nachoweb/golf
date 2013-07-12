@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <p>{{ username }} <a style="padding-left:20px" ng-href="/logout"> <i class="icon-off"></i> Cerrar sesión </a></p>
+    <!-- Left container (Side Bar) -->
+    <div id="sidebar" ng-hide="isError">
+
+        <!-- Test Table -->
+        <p id='titulo_lista_tests'>Tests </p>
+        <input ng-model="query" class="input-small search-query" placeholder="Buscar ...">
+        <ul id="listaTests">
+            <li id="test" ng-repeat="(index, test) in data | filter:query">
+                <a ng-href="#/test/{{test._id}}"
+                   ng-class="{testNoTerminado:noTerminado(test._id)}">
+                    {{test.name}} ({{test.date}})
+                </a>
+                <i ng-show="activo(test._id)" class="icon-eye-open icon-black"></i>
+            </li>
+        </ul>
+
+        <a ng-click="nuevoTest()">
+            <button id="boton" class="btn btn-primary btn-large">
+                <i class="icon-plus icon-white"></i>
+                Crear Nuevo Test
+            </button>
+        </a>
+    </div>
+</div>

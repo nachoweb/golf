@@ -1,0 +1,110 @@
+<div class="vista">
+<div ng-include src="'../public/partials/tests.html'" class="span3"></div>
+
+<div class="span9">
+    <div class="container-fluid">
+        <div ng-show="isError">
+            <p>No se han encontrado datos para este test </p>
+            <a href="#" ng-click="volver()">Volver</a>
+        </div>
+
+        <div ng-hide="isError">
+
+            <!-- Cuadro de estadísticas -->
+            <div id="cuadro_estadisticas" class="row-fluid">
+                <div class="span12">
+                    <p class="titulo">Estadísticas de {{ data[numTest].name }}</p>
+                    <div class="row-fluid">
+                        <div class="span4 medida">
+                            <img src='../public/img/flag21x21.png'>
+                            <div class="row-fluid">
+                                <div class="span12 valor">{{data[numTest].statistics.goals}}</div>
+                            </div>
+                        </div>
+                        <div class="span4 medida">
+                            Entre 1 y 5 unid.
+                            <div class="row-fluid">
+                                <div class="span12 valor">{{data[numTest].statistics.between1and5metters}}</div>
+                            </div>
+                        </div>
+                        <div class="span4 medida">
+                            + 5 unid.
+                            <div class="row-fluid">
+                                <div class="span12 valor">{{data[numTest].statistics.more5metters}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos del test -->
+            <div class="row-fluid zona">
+                <div class="span4">
+                    <div class="span5 etiqueta">
+                        Nombre del test
+                    </div>
+                    <div class="span6">
+                        <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(numTest)"
+                               class="input-small">
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="span2 etiqueta">
+                        Fecha
+                    </div>
+                    <div class="span10">
+                        <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(numTest)"
+                               class="input-small">
+                    </div>
+                </div>
+                <div class="span4">
+                </div>
+            </div>
+
+            <div class="zona row-fluid">
+                <div class="span12">
+                    <a ng-click="terminarTestActual()">
+                        <button id="boton" class="btn btn-primary btn-large" ng-disabled="!noTerminado(numTest)">
+                            <i class="icon-ok icon-white"></i>
+                            Terminar el Test
+                        </button>
+                    </a>
+
+                    <a ng-click="guardarCambios()">
+                        <button id="boton" class="btn btn-primary btn-large" ng-disabled="!hayCambios(numTest)">
+                            <i class="icon-briefcase icon-white"></i>
+                            Guardar Cambios
+                        </button>
+                    </a>
+
+                    <a ng-click="borrar()">
+                        <button id="boton" class="btn btn-primary btn-large">
+                            <i class="icon-trash icon-white"></i>
+                            Eliminar Test
+                        </button>
+                    </a>
+
+                    <!-- Board Container -->
+                    <div class="tablero">
+                        <table id="board">
+                            <tr ng-repeat="(index1, row) in data[numTest].data">
+                                <td ng-repeat="(index2,elem) in row" ng-click="boardClick(index1,index2)"
+                                    ng-class="{center:isCenter(index1,index2),
+                    zero:isZero(index1,index2),
+                    uno:elem==1,
+                    conBorde:aDistancia5(index1,index2)
+                    }">
+                                    {{elem}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+
+

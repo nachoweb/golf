@@ -59,26 +59,35 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
             $scope.isError=isError;
         }
 
-        /* Pedir lo datos al servidor
-         * Los datos se obtienen de forma ordenada por fecha
-         */
-//        ResourceTests.all({ sort: {fecha: -1} }, function (data){
-        ResourceTests.query(function (data){
-            $scope.data=data;
-            console.log('Tests descargados del servidor: ', $scope.data);
-
-            // Copia auxiliar de los datos para detectar cambios
-            $scope.dataServer = angular.copy($scope.data);
-            console.log('Data Server:', $scope.dataServer);
-        });
-
-
-
         $scope.numTest = 0; /* Número actual de test que será utilizado por todos los controladores de la app */
 
-        $scope.noTerminado = function(i){
-            if(i < $scope.data.length){
-                if($scope.data[i].estado === 'terminado'){
+        $scope.idSesion = "";
+        $scope.username = window.GolfApp.username;
+
+        // Comprobar si la máquina tiene una sesión activa con el servidor
+        console.log("Comprobar si tengo sesión activa en el servidor ...")
+        /*$http.get('/check').
+            success(function(data, status, headers, config){
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log("Sesion ya iniciada en el servidor");
+                LoginService.setUsername(data.idSesion);
+            }).
+            error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                console.log("sesion no iniciada en el servidor")
+            });*/
+
+        /*LoginService.setLogin($scope.username, $scope.password);
+         console.log("Login: ", LoginService.getUsername())
+         //        window.location ="tests.html";
+         //        $location.path('/test');*/
+
+        $scope.noTerminado = function(id){
+            var index = $scope.indexById(id);
+            if(index < $scope.data.length){
+                if($scope.data[index].estado === 'terminado'){
                     return false;
                 }
                 else{
@@ -90,14 +99,7 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
             }
         }
 
-        $scope.borrado = function(i){
-            if($scope.data[i].estado === 'borrado'){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
+
         /*
          Función para comprobar si todos los test están terminados
          */
@@ -181,8 +183,8 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
         /*
          Indica el si test index se está viendo en la pantalla
          */
-        $scope.activo = function(index){
-            return index==$scope.numTest;
+        $scope.activo = function(id){
+            return $scope.numTest==$scope.indexById(id);
         }
 
         $scope.cambiarNumTest = function(index){
@@ -195,17 +197,6 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
         $scope.mostrar_campo = false;
 
 
-        /*
-         Función para habilitar/deshabilitar que se vea el campo
-         */
-        /*$scope.verCampo = function(){
-         if($scope.mostrar_campo){
-         $scope.mostrar_campo = false;
-         }
-         else{
-         $scope.mostrar_campo = true;
-         }
-         }*/
 
         $scope.campoVisible = function(){
             if($scope.data[$scope.numTest].estado === 'no terminado'){
@@ -291,6 +282,26 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
                 $location.path('/test/0');
             });
         }
+
+        $scope.setData = function(newData){
+            $scope.data = angular.copy(newData);
+            $scope.dataServer = angular.copy(newData);
+        }
+
+        $scope.setIdSesion = function(newId){
+            $scope.idSesion = newId;
+        }
+
+
+        $scope.indexById = function(id){
+            var index = 0;
+            angular.forEach($scope.data ,function(v,k){
+                if(id===v._id){
+                    index = k;
+                }
+            });
+            return index;
+        }
     }
 ]);
 
@@ -301,9 +312,9 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
      */
     function BoardControl($scope, $routeParams, $http, ResourceTests, LoginService){
 
-        $scope.username = LoginService.getUsername();
-        $scope.numTest=$routeParams.testId; /* Cambiar de tablero */
-        var numTest=$routeParams.testId;
+        $scope.numTest=$scope.indexById($routeParams.testId); /* Cambiar de tablero */
+        console.log($routeParams.testId, '->', $scope.numTest);
+        var numTest=$scope.numTest;
 
         $scope.setIsError(false);
         if(numTest != 'nuevo' && !$scope.data[numTest]){
@@ -322,22 +333,6 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
             var month=date.getMonth();
             var realMonth=month+1;
 
-            /* Incrementar el índice de test y crear un nuevo test */
-            /*$scope.numTest = $scope.data.length;
-             $scope.data[$scope.numTest] = new ResourceTests();
-             $scope.data[$scope.numTest].data = m;
-             $scope.data[$scope.numTest].name = 'Nuevo test';
-             $scope.data[$scope.numTest].date =  day + '-' + realMonth + '-' + year;
-             $scope.data[$scope.numTest].fecha = new Date();
-             $scope.data[$scope.numTest].estado = 'no terminado';
-             $scope.data[$scope.numTest].statistics = {};
-             $scope.data[$scope.numTest].statistics.goals = 0;
-             $scope.data[$scope.numTest].statistics.between1and5metters = 0;
-             $scope.data[$scope.numTest].statistics.less1metter = 0;
-             $scope.data[$scope.numTest].statistics.more5metters = 0;
-
-             $scope.setNumTest($scope.numTest);*/
-
             // Crear test auxiliar
             var test_aux = new ResourceTests();
             var testData={
@@ -354,17 +349,6 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
                 }
             };
             angular.extend(test_aux,testData);
-
-//            test_aux.data = m;
-//            test_aux.name = 'Nuevo test';
-//            test_aux.date =  day + '-' + realMonth + '-' + year;
-//            test_aux.fecha = new Date();
-//            test_aux.estado = 'no terminado';
-//            test_aux.statistics = {};
-//            test_aux.statistics.goals = 0;
-//            test_aux.statistics.between1and5metters = 0;
-//            test_aux.statistics.less1metter = 0;
-//            test_aux.statistics.more5metters = 0;
 
             // Añadirlo al comienzo del array de tests
             $scope.data.unshift(test_aux);
@@ -472,30 +456,42 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
 ]);
 
 
-ctrlMod.controller('EstadisticasControl', ['$scope', 'LoginService',
+ctrlMod.controller('EstadisticasControl', ['$scope', 'LoginService', 'ResourceTests',
 /**
  * Controlador para la ventana de estadísticas globales
  * @constructor
  */
-function EstadisticasControl($scope, LoginService){
+function EstadisticasControl($scope, LoginService, ResourceTests){
     $scope.setNumTest(-1); // Eliminar el ojo
 
-    $scope.username = LoginService.getUsername();
     console.log("Username: ", $scope.username);
+
+    // Descargar tests
+    ResourceTests.query(function (data){
+        $scope.setData(data);
+        console.log('Tests descargados del servidor: ', $scope.data);
+        console.log('Data Server:', $scope.dataServer);
+    });
 }
 ]);
 
 
-ctrlMod.controller('LoginControl', ['$scope', '$location', 'LoginService',
+ctrlMod.controller('LoginControl', ['$http','$scope', '$location', 'LoginService',
 /**
  * Controlador para la página de login
  */
-function LoginControl($scope, $location, LoginService){
+function LoginControl($http, $scope, $location, LoginService){
     console.log("Entrando en LoginControl")
     $scope.username = "";
     $scope.password = "";
-    $scope.idError = 0; // Indica qué mensaje de error se mostrará
-    $scope.errores = ["", "Contraseña inválida", "Usuario no existe", "Usuario ya existe"];
+    $scope.idError = "exito"; // Indica qué mensaje de error se mostrará
+    $scope.errores = {
+        exito: "",
+        general: "Usuario o contraseña son incorrectos",
+        cont_invalida: "Contraseña inválida",
+        no_existe: "Usuario no existe",
+        ya_existe: "Ya existe"
+    }
 
     /**
      * Manejador de click
@@ -503,18 +499,31 @@ function LoginControl($scope, $location, LoginService){
     $scope.enviar = function(){
         console.log("LOGIN. Username: " , $scope.username, " Password: ", $scope.password);
 
-        /*
-        // Comunicarse con el servidor para validar datos ...
-         */
+        var login_data = {
+            user: $scope.username,
+            password: $scope.password
+        };
 
-        /*
-        Redirigir a la página principal
-         */
-//
+        // Enviar usuario y contraseña al servidor
+        $http.post('/login', login_data).
+            success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log("status: " + status)
+                $location.path('/test');
+            }).
+            error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                console.log("status: " + status)
+                console.log("mensaje: " + data.error)
+                $scope.idError = "general";
+            });
+
         LoginService.setLogin($scope.username, $scope.password);
         console.log("Login: ", LoginService.getUsername())
 //        window.location ="tests.html";
-        $location.path('/test');
+//        $location.path('/test');
     }
 }
 ]);

@@ -13,8 +13,16 @@ db.once('open', function callback () {
     console.log("Conexión correcta a la BD " + db_name)
 });
 
+app.set('views', __dirname + '/views');
+app.set('view engine','jade');
+
+// MIDDLEWARE
 app.use(express.static(__dirname+'/'));
 app.use(express.bodyParser());
+// pass a secret to cookieParser() for signed cookies
+app.use(express.cookieParser('manny is cool'));
+// add req.session cookie support
+app.use(express.cookieSession());
 
 // Esquema para los tests
 app.testSchema = mongoose.Schema({
@@ -34,37 +42,39 @@ app.testSchema = mongoose.Schema({
 // Modelo
 app.Test = mongoose.model('Test', app.testSchema);
 
-// Basic Autenticación
-/*app.use(express.basicAuth(function(user, pass) {
-    return user === 'javi' && pass === 'javi';
-}));*/
+app.error_msg = "";
+
+app.checkAuth = function(req, res,next){
+   if(!req.session.user_id){
+       res.send(500, { error: 'Sesión no iniciada' });
+   }
+    else{
+       next();
+   }
+}
 
 
-// Petición GET
-app.get('/rest',function(req,res){
+// API Servidor RESTful
+app.get('/rest', app.checkAuth, function(req,res){
+    console.log('Petición %s del usuario %s, url: %s', req.method, usuario,  req.url);
+    console.log("Sesion activa (usuario:%s)", req.session.user_id);
 
     var usuario=req.user;
 
-    console.log('Petición %s del usuario %s, url: %s', req.method, usuario,  req.url);
-
-    app.Test.find(function(err, tests){
+    var query = app.Test.find();
+    query.sort({fecha:'desc'});
+    query.exec(function(err, tests){
         if(err){
             console.log("find error");
         }
         res.json(tests);
     });
-
-//    res.json(app.locals[0]);
 });
 
 
-// Petición POST
-app.post('/rest', function(req, res){
+app.post('/rest', app.checkAuth, function(req, res){
     var usuario=req.user;
     console.log('Petición %s del usuario %s, url: %s', req.method, usuario,  req.url);
-
-//    res.json(req.data);
-    res.send(req.body);
 
     // Almacenar datos en la BD
     var test1 = new app.Test(req.body);
@@ -79,8 +89,7 @@ app.post('/rest', function(req, res){
 });
 
 
-// Petición DELETE
-app.delete('/rest', function(req, res){
+app.delete('/rest', app.checkAuth, function(req, res){
 
     var usuario=req.user;
     var id = req.param('id');
@@ -97,8 +106,8 @@ app.delete('/rest', function(req, res){
     });
 });
 
-// Petición UPDATE
-app.put('/rest', function(req, res){
+
+app.put('/rest', app.checkAuth, function(req, res){
     var usuario=req.user;
     console.log('Petición %s del usuario %s, url: %s', req.method, usuario,  req.url);
 
@@ -109,6 +118,51 @@ app.put('/rest', function(req, res){
 
     app.actualizar(test1);
 });
+
+
+// Ruta principal
+app.get('/', function(req, res){
+    if(!req.session.user_id){
+        res.redirect('/login');
+    }
+    else{
+        res.render('index', {username:req.session.user_id});
+    }
+})
+
+
+// Petición GET a /login para enviar la página de login
+app.get('/login', function(req, res){
+    res.render('login',{error_msg:app.error_msg})
+})
+
+
+// Petición POST a /login para autenticación
+app.post('/login', function (req, res) {
+    console.log("Entrando en login")
+    console.log("Datos recibidos:")
+    console.log(req.body)
+    var post = req.body;
+
+    if (post.username == 'user' && post.password == 'password'){
+        req.session.user_id = post.username;
+        req.session.username = post.username;
+        console.log("Sesion creada. username: " + req.session.username);
+        app.error_msg = "";
+        res.redirect('/');
+    } else {
+        app.error_msg = "Usuario o contraseña no válido"
+        res.redirect('/login');
+    }
+});
+
+// Cerrar sesión
+app.get('/logout', function(req, res){
+    console.log("Sesión %s cerrada", req.session.username);
+    req.session = null;
+    app.error_msg = "";
+    res.redirect('/login');
+})
 
 
 /**
