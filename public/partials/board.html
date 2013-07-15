@@ -11,9 +11,9 @@
         <div ng-hide="isError">
 
             <!-- Cuadro de estadísticas -->
-            <div id="cuadro_estadisticas" class="row-fluid">
-                <div class="span12">
-                    <p class="titulo">Estadísticas de {{ data[numTest].name }}</p>
+            <div id="cuadro_estadisticas">
+                <div>
+                    <h3 class="titulo">{{ data[numTest].name }}</h3>
                     <div class="row-fluid">
                         <div class="span4 medida">
                             <img src='img/flag21x21.png'>
@@ -39,53 +39,40 @@
 
             <!-- Datos del test -->
             <div class="row-fluid zona">
-                <div class="span4">
-                    <div class="span5 etiqueta">
-                        Nombre del test
-                    </div>
-                    <div class="span6">
-                        <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(numTest)"
-                               class="input-small">
-                    </div>
-                </div>
-                <div class="span4">
-                    <div class="span2 etiqueta">
-                        Fecha
-                    </div>
-                    <div class="span10">
-                        <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(numTest)"
-                               class="input-small">
-                    </div>
-                </div>
-                <div class="span4">
-                </div>
+                <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
+                       class="input-large campo" placeholder="Nombre">
+                <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
+                       class="input-large" placeholder="Fecha">
             </div>
 
+
             <div class="zona row-fluid">
-                <div class="span12">
-                    <a ng-click="terminarTestActual()">
-                        <button id="boton" class="btn btn-primary btn-large" ng-disabled="!noTerminado(numTest)">
-                            <i class="icon-ok icon-white"></i>
-                            Terminar el Test
-                        </button>
-                    </a>
+                <div>
+                    <div>
+                        <a ng-click="terminarTestActual()">
+                            <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">
+                                <i class="icon-ok icon-white"></i>
+                                Terminar el Test
+                            </button>
+                        </a>
 
-                    <a ng-click="guardarCambios()">
-                        <button id="boton" class="btn btn-primary btn-large" ng-disabled="!hayCambios(numTest)">
-                            <i class="icon-briefcase icon-white"></i>
-                            Guardar Cambios
-                        </button>
-                    </a>
+                        <a ng-click="guardarCambios()">
+                            <button class="btn btn-primary btn-large" ng-disabled="!hayCambios(numTest)">
+                                <i class="icon-briefcase icon-white"></i>
+                                Guardar Cambios
+                            </button>
+                        </a>
 
-                    <a ng-click="borrar()">
-                        <button id="boton" class="btn btn-primary btn-large">
-                            <i class="icon-trash icon-white"></i>
-                            Eliminar Test
-                        </button>
-                    </a>
+                        <a ng-click="borrar()">
+                            <button class="btn btn-primary btn-large">
+                                <i class="icon-trash icon-white"></i>
+                                Eliminar Test
+                            </button>
+                        </a>
+                    </div>
 
                     <!-- Board Container -->
-                    <div class="tablero">
+                    <div class="tablero" ng-class="{opaco:!noTerminado(data[numTest]._id)}">
                         <table id="board">
                             <tr ng-repeat="(index1, row) in data[numTest].data">
                                 <td ng-repeat="(index2,elem) in row" ng-click="boardClick(index1,index2)"

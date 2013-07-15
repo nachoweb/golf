@@ -15,6 +15,11 @@ html(lang='en', ng-app='golfModule')
         script(src='js/services.js')
         script(src='js/filters.js')
         script(src='js/directives.js')
-    body(ng-controller='MainControl')
+    body.cuerpo(ng-controller='MainControl')
         h3.titulo_app  Aplicación web para golfistas profesionales
+        div#usuarioLogueado
+            span{{ username }}
+            a(ng-href="/logout")
+                i.icon-off
+                |Cerrar sesión
         .row-fluid(ng-view='ng-view')

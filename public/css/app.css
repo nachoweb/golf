@@ -1,7 +1,7 @@
 /* app css stylesheet */
 
 body {
-  padding-top: 20px;
+ margin: 20px;
  }
 
 h1{
@@ -12,7 +12,8 @@ h1{
     text-align: center;
     font-size: 20px;
 	cursor:pointer;
-    background-color: rgba(60, 170, 83, 0.67);
+    background-color: white;
+    width: 100%;
 }
 
 #board td{
@@ -23,8 +24,7 @@ h1{
 }
 
 #board td.center{
-    background-color: rgb(238, 17, 17);
-    color:#ffffff;
+    border:2px solid black;
 }
 
 #sidebar{
@@ -49,17 +49,18 @@ h1{
 .zona{
     background-color: #dcdcdc;
     border-radius: 25px 6px 6px 6px;
-    padding: 1%;
+    padding-top: 11px;
     text-align: center;
     margin-top: 4%;
     margin-bottom: 2%;
 
 }
 
-#test{
+.test{
 	cursor:pointer;
-    padding-top: 6%;
+    padding-top: 15px;
     font-style: italic;
+    border-bottom: 2px solid white;
 }
 
 .zero{
@@ -80,10 +81,13 @@ h1{
 }
 
 .tablero{
-    padding: 2%;
-    margin: 3%;
-    background-color: #3caa53;
+    padding: 20px;
+    background-color: white;
     border-radius: 25px 25px 25px 25px;
+    width: 80%;
+    margin: auto;
+    margin-top: 4%;
+    margin-bottom: 4%;
 }
 
 .testTerminado{
@@ -103,7 +107,7 @@ h1{
 }
 
 .conBorde{
-    border: 1px solid white;
+    border: 1px solid grey;
     border-radius: 25px 6px 6px 6px;
 
 }
@@ -121,7 +125,7 @@ h1{
 #cuadro_estadisticas{
     background: #dcdcdc;
     text-align: center;
-    padding: 1%;
+    padding: 10px;
     border-radius: 25px 6px 6px 6px;
     margin-top: 2%;
     margin-bottom: 2%;
@@ -129,7 +133,7 @@ h1{
 
 #cuadro_estadisticas .medida{
     background: rgba(220, 220, 220, 0.60);
-    padding: 1%;
+    padding: 10px;
     margin-top: 1%;
     border-radius: 6px 6px 6px 6px;
     color: rgb(156, 32, 21);
@@ -138,7 +142,7 @@ h1{
 
 #cuadro_estadisticas .valor{
     background: rgba(2, 74, 151, 0.61);
-    padding: 2%;
+    padding: 6px;
     border-radius: 25px 6px 6px 6px;
     color: white;
     font-style: normal;
@@ -147,7 +151,6 @@ h1{
 
 #cuadro_estadisticas .titulo{
     font-size: 1.3em;
-    font-style: italic;
     font-family: "Times New Roman", Times, serif;
 }
 
@@ -177,7 +180,7 @@ h1{
     font-size: 1.1em;
     font-style: italic;
     font-family: "Times New Roman", Times, serif;
-    padding: 1%;
+    padding: 5px;
 }
 
 .datos_test{
@@ -187,5 +190,33 @@ h1{
 
 #boton{
     border-radius: 6px 6px 25px 25px;
+}
+
+.cuerpo{
+    margin: 2%;
+}
+
+#input_buscar{
+    width: 86%;
+}
+
+.campo{
+    margin-right: 10%;
+}
+
+.opaco{
+    opacity: 0.4;
+}
+
+#usuarioLogueado{
+    position:absolute;
+    top: 30px;
+    right: 36px;
+}
+
+#usuarioLogueado span {
+    font-size: 20px;
+    padding: 0 10px;
+    font-weight: bold;
 }
 

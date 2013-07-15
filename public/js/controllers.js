@@ -312,74 +312,32 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
      */
     function BoardControl($scope, $routeParams, $http, ResourceTests, LoginService){
 
-        $scope.numTest=$scope.indexById($routeParams.testId); /* Cambiar de tablero */
-        console.log($routeParams.testId, '->', $scope.numTest);
-        var numTest=$scope.numTest;
+        // Descargar tests
+        ResourceTests.query(function (data){
+            $scope.setData(data);
+            console.log('Tests descargados del servidor: ', $scope.data);
+            console.log('Data Server:', $scope.dataServer);
 
-        $scope.setIsError(false);
-        if(numTest != 'nuevo' && !$scope.data[numTest]){
-            $scope.setIsError(true);
-        }
+            $scope.numTest=$scope.indexById($routeParams.testId); /* Cambiar de tablero */
+            console.log($routeParams.testId, '->', $scope.numTest);
+            var numTest=$scope.numTest;
 
-        if(numTest === 'nuevo'){
-            /* Crear un tablero relleno con ceros */
-            var dim = 20;
-            var m = Array.matrix(dim,dim,0);
+            $scope.setIsError(false);
+            if(!$scope.data[numTest]){
+                $scope.setIsError(true);
+            }
 
-            /* Obtener fecha */
-            var date = new Date();
-            var day=date.getDate();
-            var year=date.getFullYear();
-            var month=date.getMonth();
-            var realMonth=month+1;
-
-            // Crear test auxiliar
-            var test_aux = new ResourceTests();
-            var testData={
-                data : m,
-                name : 'Nuevo test',
-                date : day + '-' + realMonth + '-' + year,
-                fecha : new Date(),
-                estado : 'no terminado',
-                statistics:{
-                    goals : 0,
-                    between1and5metters: 0,
-                    less1metter : 0,
-                    more5metters : 0
-                }
-            };
-            angular.extend(test_aux,testData);
-
-            // Añadirlo al comienzo del array de tests
-            $scope.data.unshift(test_aux);
-
-            // Fijar el test actual
-            $scope.numTest = 0;
-            $scope.setNumTest(0);
-
-            // Guardar en el servidor
-            $scope.data[$scope.numTest].$save(function(data){
-                $scope.data[$scope.numTest]["_id"]=angular.copy(data["_id"])
-                console.log("data ",data);
-                console.log("local ",$scope.data[$scope.numTest])
-                // Copia local
-                $scope.dataServer = angular.copy($scope.data);
-                console.log("dataSever modificado");
-            });
-
-
-        }
-        else{
             // Comprobar que se ha indicado un id de test válido
-            if(numTest > $scope.data.length){
+            if (numTest > $scope.data.length) {
                 console.log("No hay datos para este test")
                 $scope.setNumTest(-1);
             }
-            else{
+            else {
                 $scope.setNumTest($scope.numTest);
             }
+        });
 
-        }
+
 
         /* Function to handle a cell click */
         $scope.boardClick = function(fil, col){
