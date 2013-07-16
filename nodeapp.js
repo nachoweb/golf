@@ -164,6 +164,29 @@ app.get('/logout', function(req, res){
     res.redirect('/login');
 })
 
+app.get('/cache.manifest', function(req, res){
+    console.log('Petición %s , url: %s', req.method,  req.url);
+    res.header("Content-Type", "text/cache-manifest");
+//    res.end("CACHE MANIFEST");
+
+    var manifest = 'CACHE MANIFEST\n'+
+        '# rev 1\n' +
+    'css/app.css\n' +
+    'css/bootstrap.css\n'+
+    'img/flag21x21.png\n'+
+    'js/controllers.js\n' +
+    'js/routes.js\n'   +
+    'js/services.js\n' +
+    'lib/angular/angular.js\n'  +
+    'lib/angular/angular-resource.min.js\n' +
+    'partials/board.html\n'+
+    'partials/tests.html\n' +
+    'partials/welcome.html\n' +
+    'img/glyphicons-halflings.png\n' +
+     'img/glyphicons-halflings-white.png\n';
+    res.end(manifest);
+});
+
 
 /**
  * Actualizar un test
@@ -171,7 +194,10 @@ app.get('/logout', function(req, res){
  * nuevo debe existir en mongodb, se utiliza su id para actualizar.
  */
 app.actualizar = function(nuevo){
-    /* Actualizar el test */
+
+    console.log("Test a guardar: ");
+    console.log(nuevo)
+    // Actualizar el test
     nuevo.update({name: nuevo.name}, {},
         function(){
             console.log("Actualizado nombre")
@@ -188,14 +214,41 @@ app.actualizar = function(nuevo){
         function(){
             console.log("Actualizado fecha")
         });
-    nuevo.update({statistics:nuevo.statistics}, {},
+    nuevo.update({'statistics.goals':nuevo.statistics.goals}, {},
         function(){
-            console.log("Actualizado estadisticas")
+            console.log("Actualizado goals")
         });
+
+    nuevo.update({'statistics.between1and5metters':nuevo.statistics.between1and5metters}, {},
+        function(){
+            console.log("Actualizado between1and5metters")
+        });
+
+    nuevo.update({'statistics.more5metters':nuevo.statistics.more5metters}, {},
+        function(){
+            console.log("Actualizado more5metters")
+        });
+
     nuevo.update({data:nuevo.data}, {},
         function(){
             console.log("Actualizado data")
         });
+
+
+
+
+
+    /*app.Test.findByIdAndUpdate(nuevo._id, nuevo, function(){
+        console.log("Test completo actualizado")
+    });*/
+
+    /*app.Test.update({ _id: nuevo._id }, {'statistics':nuevo.statistics}, function (err, numberAffected, raw) {
+        if (err){
+            console.log("error")
+        }
+        console.log('The number of updated documents was %d', numberAffected);
+        console.log('The raw response from Mongo was ', raw);
+    });*/
 }
 
 console.log("Servidor iniciado en puerto 2700")

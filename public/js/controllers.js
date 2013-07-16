@@ -345,13 +345,43 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
             if($scope.data[$scope.numTest].estado === 'no terminado'){
                 $scope.data[$scope.numTest].data[fil][col]++;
 
-                // Aumentar número de aciertos
                 if($scope.isCenter(fil,col)){
                     $scope.data[$scope.numTest].statistics.goals++;
                 }
+                else if($scope.isBetw15(fil,col)){
+                    $scope.data[$scope.numTest].statistics.between1and5metters++;
+                }
+                else if($scope.isMor5(fil,col)){
+                    $scope.data[$scope.numTest].statistics.more5metters++;
+                }
             }
+        }
 
+        $scope.isMor5 = function(fil, col){
+            var centro = $scope.data[0].data.length/2;
+            var diff_x = Math.abs(fil-centro);
+            var diff_y = Math.abs(col-centro);
 
+            if((diff_x>5) || (diff_y>5)){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
+        $scope.isBetw15 = function(fil, col){
+            var centro = $scope.data[0].data.length/2;
+            var diff_x = Math.abs(fil-centro);
+            var diff_y = Math.abs(col-centro);
+
+            var max = Math.max(diff_x,diff_y);
+            if(max>=1 && max<=5){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
 
         /* Function to detect the center cell */
