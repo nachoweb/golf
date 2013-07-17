@@ -1,22 +1,51 @@
 var serv=angular.module('servMod',[]);
 
+
+function creaMatriz(m,n,initial){
+    var a,i,j,mat=[];
+    for(i=0; i<m; i++){
+        a=[];
+        for(j=0; j<n; j++){
+            a[j]=initial;
+        }
+        mat[i]=a;
+    }
+    return mat;
+}
+
+
+
+function getIndexById(datos,id) {
+    var index=-1;
+    angular.forEach(datos, function (v, k) {
+        if(v._id==id){ index = k; }
+    });
+    return index;
+}
+
 /**
  * Servicio de almacenamiento local
  */
-serv.factory('Storage', function() {
-    var Res={};
+serv.factory('storage', function() {
+    var storage={};
+    function getData() { return JSON.parse(localStorage.getItem("datosGolf")); }
+
+    function setData(data) {return localStorage.setItem('datosGolf',JSON.stringify(data)); }
 
     // Conjunto de tests
-    Res.data = [];
+    storage.data = [];
 
     /**
      * Extraer todos los test del local storage
      * @param cb Callback
      */
-    Res.query = function(cb){
-       console.log("query")
-       var data = [];
-       cb(data);
+    storage.query = function(cb){
+        storage.data=getData();
+        if(!storage.data){
+            storage.data=[];
+            setData([]);
+        }
+       cb(storage.data);
     }
 
 
@@ -25,12 +54,11 @@ serv.factory('Storage', function() {
      * @param newData Nuevo test a guardar
      * @param cb Callback
      */
-    Res.create = function(cb){
-        console.log("Creando un nuevo test ...")
+    storage.createTest = function(cb){
 
         /* Crear un tablero relleno con ceros */
         var dim = 10;
-        var m = Array.matrix(dim,dim,0);
+        var m = creaMatriz(dim,dim,0);
 
         /* Obtener fecha */
         var date = new Date();
@@ -40,7 +68,7 @@ serv.factory('Storage', function() {
         var realMonth=month+1;
 
         var test={
-            _id: new Date().getTime(), // ID unívoco
+            _id: date.getTime(), // ID unívoco
             data : m,
             name : 'Nuevo test',
             date : day + '-' + realMonth + '-' + year,
@@ -54,11 +82,10 @@ serv.factory('Storage', function() {
             }
         };
 
-        // Almacenar el test
-        localStorage.setItem("datosGolf", JSON.stringify(test));
-        cb(test);
+        storage.data.unshift(test);
+        setData(storage.data);
+        cb({err:false,datos:test});
     }
-    return Res;
 
 
     /**
@@ -66,10 +93,17 @@ serv.factory('Storage', function() {
      * @param newData Test a actualizar
      * @param cb Callback
      */
-    Res.update = function(newData, cb){
-        console.log("update")
-        var data = {};
-        cd(data);
+    storage.update = function(newData, cb){
+        var arrLocalStorage=getData();
+        var index=getIndexById(arrLocalStorage,newData._id);
+        if(index!=-1){
+            arrLocalStorage[index]=newData;
+            setData(arrLocalStorage);
+            cb({err:false,index:index});
+        }else{
+            console.log("No se se encuentra el test en localStorage para actualizar")
+            cb({err:true})
+        }
     }
 
 
@@ -79,35 +113,107 @@ serv.factory('Storage', function() {
      * @param newData Test a borrar
      * @param cb Callback
      */
-    Res.remove = function(newData, cb){
+    storage.remove = function(testToRemove, cb){
         console.log("update")
-        var data = {};
-        cd(data);
+        var arrayTest=getData();
+        var index=getIndexById(arrayTest,testToRemove._id);
+        if(index!=-1){
+           arrayTest.splice(index,1);
+           storage.data.splice(index,1);
+           setData(arrayTest);
+           cb({err:false,index:index});
+        }else{
+            console.log("No se encuentra el test para borrar");
+            cb({err:true});
+        }
     }
+
+
+
+
+    return storage;
 });
 
-/**
- * Servicio para mantener un objeto que contiene el usuario y contraseña
- */
-serv.factory('LoginService',function(){
-    console.log("Creando servicio LoginService")
-    var Service = {};
-    Service.username = "";
-    Service.password = "";
 
-    Service.setLogin = function(u,p){
-        this.username = u;
-        this.password = p;
-    }
+serv.factory('estadisticasGlobales',function () {
+       var servicioEstadGlob={
 
-    Service.setUsername = function(newName){
-        this.username = newName;
-    }
+           calculaEstadisticasGlobales: function (datos) {
+                var obj={
+                    mediaGoals: 5,
+                    goalUltimo: 15
+                }
+              return obj;
 
-    Service.getUsername = function(){
-        return this.username;
-    }
+           }
+       };
 
-    return Service;
+
+
+
+        return servicioEstadGlob;
+})
+
+
+
+serv.factory('calculosBoard',function () {
+   var servicio={
+       idActivo:0,
+       isCenter:function (data,fil,col) {
+           var centro=Math.floor(data.length/2);
+           return fil==centro && col==centro;
+       },
+
+       findTestById: function (datos,id) {
+           var index = -1;
+           angular.forEach(datos ,function(v,k){
+               if(id ==v._id){
+                   index = k;
+               }
+           });
+           return index;
+       },
+       isMor5:function (data,fila,columna) {
+           var centro = data.length/2;
+           var diff_x = Math.abs(fila-centro);
+           var diff_y = Math.abs(columna-centro);
+
+           if((diff_x>5) || (diff_y>5)){
+               return true;
+           }
+           else{
+               return false;
+           }
+       },
+       isBetw15:function (data,fila,columna) {
+           var centro = data.length/2;
+           var diff_x = Math.abs(fila-centro);
+           var diff_y = Math.abs(columna-centro);
+
+           var max = Math.max(diff_x,diff_y);
+           if(max>=1 && max<=5){
+               return true;
+           }
+           else{
+               return false;
+           }
+       },
+       aDistancia5:function (data,fila,columna) {
+           var centro=data.length/ 2,
+               dif_filas = Math.abs(fila - centro),
+               dif_columnas = Math.abs(columna - centro);
+
+           if((dif_filas == 5 && dif_columnas <= 5) || (dif_filas <= 5 && dif_columnas == 5) ||
+               (dif_filas == 9 && dif_columnas <= 9) || (dif_filas <= 9 && dif_columnas == 9)){
+               return true;
+           }
+
+           else{
+               return false;
+           }
+       }
+
+   };
+
+    return servicio;
 });
-

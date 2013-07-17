@@ -63,22 +63,12 @@ h1{
     border-bottom: 2px solid white;
 }
 
-.zero{
-	color:hsl(240, 45%, 90%);
-}
-.uno{
-	color:hsl(240, 45%, 0%);
-}
-.dos{
-	color:hsl(240, 45%, 80%);
-}
-.tres{
-	color:hsl(240, 45%, 100%);
-}
+.zero{ color:hsl(240, 45%, 90%); }
+.uno{ color:hsl(240, 45%, 0%); }
+.dos{ color:hsl(240, 45%, 80%); }
+.tres{ color:hsl(240, 45%, 100%); }
 
-.btn{
-	margin: 10px;
-}
+.btn{ margin: 10px; }
 
 .tablero{
     padding: 20px;
@@ -90,21 +80,13 @@ h1{
     margin-bottom: 4%;
 }
 
-.testTerminado{
-	color: blue;
-}
+.testTerminado{ color: blue; }
 
-.testNoTerminado{
-	color:red;
-}
+.testNoTerminado{ color:red; }
 
-.testBorrado{
-    color:grey;
-}
+.testBorrado{ color:grey; }
 
-.lista_estadisticas li{
-    margin-top: 20px;
-}
+.lista_estadisticas li{ margin-top: 20px; }
 
 .conBorde{
     border: 1px solid grey;
@@ -146,7 +128,8 @@ h1{
     border-radius: 25px 6px 6px 6px;
     color: white;
     font-style: normal;
-    margin-top: 2%;
+    margin-top: 8px;
+    font-weight: bold;
 }
 
 #cuadro_estadisticas .titulo{
@@ -166,14 +149,14 @@ h1{
 }
 
 .titulo_app{
-    margin-left:2%;
+    margin-left:20px;
+    padding-left: 40px;
     font-size: 1.7em;
     font-style: italic;
     font-family: "Times New Roman", Times, serif;
     color: rgb(86, 130, 177);
     border-bottom: 2px solid;
     height: 30px;
-    width: 97%;
 }
 
 .etiqueta{
@@ -183,40 +166,19 @@ h1{
     padding: 5px;
 }
 
-.datos_test{
-    margin-bottom: 3%;
-    margin-top: 5%;
-}
+.datos_test{ margin-bottom: 3%; margin-top: 5%; }
 
-#boton{
-    border-radius: 6px 6px 25px 25px;
-}
+#boton{ border-radius: 6px 6px 25px 25px; }
 
-.cuerpo{
-    margin: 2%;
-}
+.cuerpo{ margin: 2%; }
 
-#input_buscar{
-    width: 86%;
-}
+#input_buscar{ width: 86%; }
 
-.campo{
-    margin-right: 10%;
-}
+.campo{ margin-right: 10%; }
 
-.opaco{
-    opacity: 0.4;
-}
+.opaco{ opacity: 0.4; }
 
-#usuarioLogueado{
-    position:absolute;
-    top: 30px;
-    right: 36px;
-}
+#usuarioLogueado{ position:absolute; top: 30px; right: 36px; }
 
-#usuarioLogueado span {
-    font-size: 20px;
-    padding: 0 10px;
-    font-weight: bold;
-}
+#usuarioLogueado span { font-size: 20px; padding: 0 10px; font-weight: bold; }
 

@@ -10,7 +10,7 @@
                    ng-class="{testNoTerminado:noTerminado(test._id)}">
                     {{test.name}} ({{test.date}})
                 </a>
-                <i ng-show="activo(test._id)" class="icon-eye-open icon-black"></i>
+                <i ng-show="test._id == getIdActivo()" class="icon-eye-open icon-black"></i>
             </li>
         </ul>
 

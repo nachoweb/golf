@@ -49,21 +49,21 @@
             <div class="zona row-fluid">
                 <div>
                     <div>
-                        <a ng-click="terminarTestActual()">
+                        <a ng-click="terminarTestActual(numTest)">
                             <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">
                                 <i class="icon-ok icon-white"></i>
                                 Terminar el Test
                             </button>
                         </a>
 
-                        <a ng-click="guardarCambios()">
+                        <a ng-click="guardarCambios(numTest)">
                             <button class="btn btn-primary btn-large" ng-disabled="!hayCambios(numTest)">
                                 <i class="icon-briefcase icon-white"></i>
                                 Guardar Cambios
                             </button>
                         </a>
 
-                        <a ng-click="borrar()">
+                        <a ng-click="borrar(numTest)">
                             <button class="btn btn-primary btn-large">
                                 <i class="icon-trash icon-white"></i>
                                 Eliminar Test
@@ -74,12 +74,12 @@
                     <!-- Board Container -->
                     <div class="tablero" ng-class="{opaco:!noTerminado(data[numTest]._id)}">
                         <table id="board">
-                            <tr ng-repeat="(index1, row) in data[numTest].data">
-                                <td ng-repeat="(index2,elem) in row" ng-click="boardClick(index1,index2)"
-                                    ng-class="{center:isCenter(index1,index2),
-                    zero:isZero(index1,index2),
+                            <tr ng-repeat="(fila, row) in data[numTest].data">
+                                <td ng-repeat="(columna,elem) in row" ng-click="boardClick(fila,columna)"
+                                    ng-class="{center:isCenter(data[numTest].data,fila,columna),
+                    zero:isZero(fila,columna),
                     uno:elem==1,
-                    conBorde:aDistancia5(index1,index2)
+                    conBorde:aDistancia5(data[numTest].data,fila,columna)
                     }">
                                     {{elem}}
                                 </td>
