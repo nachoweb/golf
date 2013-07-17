@@ -15,7 +15,7 @@ serv.factory('Storage', function() {
      */
     Res.query = function(cb){
        console.log("query")
-       var data = {};
+       var data = [];
        cb(data);
     }
 

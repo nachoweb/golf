@@ -63,23 +63,6 @@ ctrlMod.controller('MainControl', ['$scope', 'Storage', '$location', '$http', 'L
 
         // Comprobar si la máquina tiene una sesión activa con el servidor
         console.log("Comprobar si tengo sesión activa en el servidor ...")
-        /*$http.get('/check').
-            success(function(data, status, headers, config){
-                // this callback will be called asynchronously
-                // when the response is available
-                console.log("Sesion ya iniciada en el servidor");
-                LoginService.setUsername(data.idSesion);
-            }).
-            error(function(data, status, headers, config) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-                console.log("sesion no iniciada en el servidor")
-            });*/
-
-        /*LoginService.setLogin($scope.username, $scope.password);
-         console.log("Login: ", LoginService.getUsername())
-         //        window.location ="tests.html";
-         //        $location.path('/test');*/
 
         $scope.noTerminado = function(id){
             var index = $scope.indexById(id);
@@ -283,12 +266,37 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Storage'
      */
     function BoardControl($scope, $routeParams, $http, Storage, LoginService){
 
-        // Descargar tests
-        Storage.query(function (data){
-            $scope.setData(data);
-            console.log('Tests descargados del servidor: ', $scope.data);
-            console.log('Data Server:', $scope.dataServer);
+        /*
+        Si no hay test, descargarlos.
+        Esta situación se da cuando accedemos mediante la ruta /test/id directamente, ya que no se carga el
+        controlador EstadisticasControl y, por tanto, no se descargan los tests.
+         */
+        if($scope.data.length == 0){
 
+            Storage.query(function (data){
+                $scope.setData(data);
+                console.log('Tests descargados del servidor: ', $scope.data);
+                console.log('Data Server:', $scope.dataServer);
+
+                $scope.numTest=$scope.indexById($routeParams.testId); /* Cambiar de tablero */
+                console.log($routeParams.testId, '->', $scope.numTest);
+                var numTest=$scope.numTest;
+
+                $scope.setIsError(false);
+                if(!$scope.data[numTest]){
+                    $scope.setIsError(true);
+                }
+
+                // Comprobar que se ha indicado un id de test válido
+                if (numTest > $scope.data.length) {
+                    console.log("No hay datos para este test")
+                    $scope.setNumTest(-1);
+                }
+                else {
+                    $scope.setNumTest($scope.numTest);
+                }
+            });
+        }else{
             $scope.numTest=$scope.indexById($routeParams.testId); /* Cambiar de tablero */
             console.log($routeParams.testId, '->', $scope.numTest);
             var numTest=$scope.numTest;
@@ -306,7 +314,8 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Storage'
             else {
                 $scope.setNumTest($scope.numTest);
             }
-        });
+        }
+
 
 
         /* Function to handle a cell click */
