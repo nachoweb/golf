@@ -42,12 +42,9 @@ function printMatrix(matrix){
  * @type {module}
  */
 
-ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$http', 'LoginService',
-    /* Main Controller
-     Utiliza el objeto ResourceTests que es un recurso para comunicarnos con el servidor sin hacer
-     del servicio $http de Angular
-     */
-    function MainControl($scope, ResourceTests, $location, $http, LoginService){
+ctrlMod.controller('MainControl', ['$scope', 'Storage', '$location', '$http', 'LoginService',
+
+    function MainControl($scope, Storage, $location, $http, LoginService){
         console.log("Creando controlador MainControl");
         console.log("Nombre de usuario: ", LoginService.getUsername());
         /* Datos sobre los test que serán heredados por los demás controladores de la app */
@@ -122,10 +119,10 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
                 console.log("Test a eliminar: " + $scope.data[$scope.numTest])
 
                 // Eliminar del servidor
-                $scope.data[$scope.numTest].$remove(function(){
+                Storage.remove($scope.data[$scope.numTest], function(data){
 
                     // No consigo que se ejecute
-                    console.log('Test eliminado del servidor:', $scope.data[$scope.numTest]);
+                    console.log('Test eliminado del servidor:', data);
                 });
 
                 // Si solo queda un test
@@ -160,11 +157,10 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
                     };
                     angular.extend($scope.data[$scope.numTest],testData);
 
-                    // Actualizar en el servidor
-                    /*$scope.data[$scope.numTest].$update(function(){
-                     console.log("Test actualizado en el servidor: ", $scope.data[$scope.numTest]);
-                     });*/
-                    $scope.data[$scope.numTest].$update();
+                    Storage.update($scope.data[$scope.numTest], function(data){
+                        console.log("Test actualizado")
+                        console.log(data)
+                    });
 
                 }else{
                     var aux = $scope.numTest;
@@ -214,10 +210,11 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
             if (confirm("¿Está seguro de que desea terminar el test? Después no podrá ser modificado.")) {
 
                 $scope.data[$scope.numTest].estado = 'terminado';
-                $scope.data[$scope.numTest].$update(function(){
+                Storage.update($scope.data[$scope.numTest], function(data){
 
                     // No consigo que se ejecute esta función de callback
-                    console.log('Test actualizado en el servidor:',  $scope.data[$scope.numTest]);
+                    console.log('Test actualizado en el servidor:');
+                    console.log(data)
                     $scope.dataServer[$scope.numTest] = angular.copy($scope.data[$scope.numTest]);
                 });
 
@@ -235,51 +232,25 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
         /**
          * Crear un nuevo test
          */
-        $scope.nuevoTest = function(){
-            /* Crear un tablero relleno con ceros */
-            var dim = 20;
-            var m = Array.matrix(dim,dim,0);
-
-            /* Obtener fecha */
-            var date = new Date();
-            var day=date.getDate();
-            var year=date.getFullYear();
-            var month=date.getMonth();
-            var realMonth=month+1;
-
-            // Crear test auxiliar
-            var test_aux = new ResourceTests();
-            var testData={
-                data : m,
-                name : 'Nuevo test',
-                date : day + '-' + realMonth + '-' + year,
-                fecha : new Date(),
-                estado : 'no terminado',
-                statistics:{
-                    goals : 0,
-                    between1and5metters: 0,
-                    less1metter : 0,
-                    more5metters : 0
-                }
-            };
-            angular.extend(test_aux,testData);
-
-            // Añadirlo al comienzo del array de tests
-            $scope.data.unshift(test_aux);
-
-            // Fijar el test actual
-            $scope.numTest = 0;
-            $scope.setNumTest(0);
+        $scope.nuevoTest = function () {
 
             // Guardar en el servidor
-            $scope.data[$scope.numTest].$save(function(data){
-                $scope.data[$scope.numTest]["_id"]=angular.copy(data["_id"])
-//            console.log("data ",data);
-//            console.log("local ",$scope.data[$scope.numTest])
+            Storage.create(function (test_created) {
+                console.log("Test creado:")
+                console.log(test_created)
+
+                // Añadirlo al comienzo del array de tests
+                $scope.data.unshift(test_created);
+
+                // Fijar el test actual
+                $scope.numTest = 0;
+                $scope.setNumTest(0);
+
                 // Copia local
                 $scope.dataServer = angular.copy($scope.data);
                 console.log("dataSever modificado");
-                $location.path('/test/0');
+
+                $location.path('/test/' + test_created._id);
             });
         }
 
@@ -305,15 +276,15 @@ ctrlMod.controller('MainControl', ['$scope', 'ResourceTests', '$location', '$htt
     }
 ]);
 
-ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'ResourceTests', 'LoginService',
+ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Storage', 'LoginService',
     /*
      Board Controller
      data es un objeto heredado del scope de MainControl (padre)
      */
-    function BoardControl($scope, $routeParams, $http, ResourceTests, LoginService){
+    function BoardControl($scope, $routeParams, $http, Storage, LoginService){
 
         // Descargar tests
-        ResourceTests.query(function (data){
+        Storage.query(function (data){
             $scope.setData(data);
             console.log('Tests descargados del servidor: ', $scope.data);
             console.log('Data Server:', $scope.dataServer);
@@ -336,7 +307,6 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
                 $scope.setNumTest($scope.numTest);
             }
         });
-
 
 
         /* Function to handle a cell click */
@@ -430,10 +400,10 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
 
         $scope.guardarCambios = function(){
             // Enviar petición PUT
-            $scope.data[$scope.numTest].$update({}, function(){
+            Storage.update($scope.data[$scope.numTest], function(data){
 
                 // No consigo que se ejecute
-                console.log('Test actualizado en el servidor:',  $scope.data[$scope.numTest]);
+                console.log('Test actualizado en el servidor:',  data);
                 $scope.dataServer[$scope.numTest] = angular.copy($scope.data[$scope.numTest]);
             }, {});
 
@@ -444,18 +414,18 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$http', 'Resource
 ]);
 
 
-ctrlMod.controller('EstadisticasControl', ['$scope', 'LoginService', 'ResourceTests',
+ctrlMod.controller('EstadisticasControl', ['$scope', 'LoginService', 'Storage',
 /**
  * Controlador para la ventana de estadísticas globales
  * @constructor
  */
-function EstadisticasControl($scope, LoginService, ResourceTests){
+function EstadisticasControl($scope, LoginService, Storage){
     $scope.setNumTest(-1); // Eliminar el ojo
 
     console.log("Username: ", $scope.username);
 
     // Descargar tests
-    ResourceTests.query(function (data){
+    Storage.query(function (data){
         $scope.setData(data);
         console.log('Tests descargados del servidor: ', $scope.data);
         console.log('Data Server:', $scope.dataServer);

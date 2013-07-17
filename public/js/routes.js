@@ -6,7 +6,7 @@ The module define the routes and the service
 */
 var app=angular.module('golfModule', ['servMod','ctrlMod']);
 
-app.config(['$routeProvider', function($routeProvider) {
+app.config(['$routeProvider', function($routeProvider){
   $routeProvider.
       when('/test', {templateUrl: 'partials/welcome.html', controller: 'EstadisticasControl'}).
 	  when('/test/:testId', {templateUrl: 'partials/board.html' , controller: 'BoardControl'}).
