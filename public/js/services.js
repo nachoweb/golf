@@ -1,6 +1,5 @@
 var serv=angular.module('servMod',[]);
 
-
 function creaMatriz(m,n,initial){
     var a,i,j,mat=[];
     for(i=0; i<m; i++){
@@ -13,9 +12,7 @@ function creaMatriz(m,n,initial){
     return mat;
 }
 
-
-
-function getIndexById(datos,id) {
+function getIndexById(datos,id){
     var index=-1;
     angular.forEach(datos, function (v, k) {
         if(v._id==id){ index = k; }
@@ -28,12 +25,11 @@ function getIndexById(datos,id) {
  */
 serv.factory('storage', function() {
     var storage={};
-    function getData() { return JSON.parse(localStorage.getItem("datosGolf")); }
 
+    function getData() { return JSON.parse(localStorage.getItem("datosGolf")); }
     function setData(data) {return localStorage.setItem('datosGolf',JSON.stringify(data)); }
 
-    // Conjunto de tests
-    storage.data = [];
+    storage.data = []; //Conjunto de tests
 
     /**
      * Extraer todos los test del local storage
@@ -82,6 +78,8 @@ serv.factory('storage', function() {
             }
         };
 
+        console.log("Datos storage: ")
+        console.log(storage.data);
         storage.data.unshift(test);
         setData(storage.data);
         cb({err:false,datos:test});
@@ -128,9 +126,6 @@ serv.factory('storage', function() {
         }
     }
 
-
-
-
     return storage;
 });
 
@@ -144,16 +139,11 @@ serv.factory('estadisticasGlobales',function () {
                     goalUltimo: 15
                 }
               return obj;
-
            }
        };
 
-
-
-
         return servicioEstadGlob;
 })
-
 
 
 serv.factory('calculosBoard',function () {
@@ -163,7 +153,6 @@ serv.factory('calculosBoard',function () {
            var centro=Math.floor(data.length/2);
            return fil==centro && col==centro;
        },
-
        findTestById: function (datos,id) {
            var index = -1;
            angular.forEach(datos ,function(v,k){
@@ -212,7 +201,6 @@ serv.factory('calculosBoard',function () {
                return false;
            }
        }
-
    };
 
     return servicio;

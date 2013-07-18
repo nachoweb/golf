@@ -21,13 +21,11 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         $scope.dataServer=[];
 
         storage.query(function (data) {
-            $scope.data=data;
+            $scope.data=data; //$scope.data será una referencia a storage.data
             $scope.dataServer=angular.copy(data);
             console.log('Tests cargados: ', $scope.data);
-//            console.log('Data Server:', $scope.dataServer);
 
         });
-
 
 
         console.log("Nombre de usuario: ", window.GolfApp.username);
@@ -61,24 +59,15 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
             }
         }
 
-
-
-
-
-
-
         $scope.nuevoTest = function () {
 
-            storage.createTest(function (data) {
-                if(!data.err){
-                    $scope.dataServer.unshift(data.datos)
-                    $location.path("/test/"+data.datos._id);
-
+            storage.createTest(function (createdData) {
+                if(!createdData.err){
+                    $scope.dataServer.unshift(createdData.datos)
+                    $location.path("/test/"+createdData.datos._id);
                 }
-
             });
         }
-
     }
 ]);
 
@@ -92,18 +81,12 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams','$location', 'stora
          */
             $scope.numTest=calculosBoard.findTestById($scope.data,$routeParams.testId); /* Cambiar de tablero */
 
-
-//            console.log($routeParams.testId, '->', $scope.numTest);
             var numTest=$scope.numTest;
-
-
             if(numTest==-1){
                 $scope.setIsError(true);
             }else{
                 calculosBoard.idActivo=$routeParams.testId;
             }
-
-
 
         /* Function to handle a cell click */
         $scope.boardClick = function(fil, col){
@@ -199,8 +182,6 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams','$location', 'stora
 
             }
         }
-
-
     }
 ]);
 

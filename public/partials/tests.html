@@ -3,7 +3,7 @@
     <div id="sidebar" ng-hide="isError">
 
         <!-- Test Table -->
-        <input id="input_buscar" ng-model="query" class="search-query" placeholder="Buscar ...">
+        <input id="input_buscar" style="width: 86%;" ng-model="query" class="search-query" placeholder="Buscar ...">
         <ul id="listaTests">
             <li ng-repeat="(index, test) in data | filter:query" class="test">
                 <a ng-href="#/test/{{test._id}}"
