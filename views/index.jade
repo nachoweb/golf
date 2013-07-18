@@ -18,12 +18,12 @@ html(lang='en', ng-app='golfModule')
         //script(src='js/filters.js')
         //script(src='js/directives.js')
     body#cuerpo(ng-controller='MainControl')
-        div(style="border-bottom: 2px solid rgb(86, 130, 177);margin-bottom: 10px;")
+        div#cabeceraTitulo
             a(href="/"): img(src="img/home.png",style="position:absolute;width:35px;top: 3px; left: 20px;")
-            h3(id='tituloApp')  Aplicación web para golfistas profesionales
-            .pull-right#usuarioLogueado
+            h3  Aplicación web para golfistas profesionales
+            .pull-right
                 span {{ username }}
                 a(ng-href="/logout")
                     i.icon-off
                     |Cerrar sesión
-        .row-fluid(ng-view='ng-view')
+        div(ng-view='ng-view')

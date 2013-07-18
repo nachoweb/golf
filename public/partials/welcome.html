@@ -1,34 +1,31 @@
-<div class="vista">
-<div ng-include src="'partials/tests.html'" class="span3"></div>
-<!-- Global Statistics Container -->
-<div class="span9">
+<div class="row-fluid">
+    <div ng-include src="'partials/tests.html'" class="span3"></div>
+    <!-- Global Statistics Container -->
+    <div class="span9">
+        <!-- Cuadro de estadísticas -->
+        <div id="cuadro_estadisticas">
+                <div class="row-fluid">
+                    <h3>Estadísticas Globales</h3>
+                    <div class="span4 medida">
+                        <img src='img/flag21x21.png'>
 
-    <!-- Cuadro de estadísticas -->
-    <div id="cuadro_estadisticas">
-        <div>
-            <div class="row-fluid">
-                <h3>Estadísticas Globales</h3>
-                <div class="span4 medida">
-                    <img src='img/flag21x21.png'>
-
-                    <div class="row-fluid">
-                        <div class="span12 valor">{{estadisticas.mediaGoals}}</div>
+                        <div class="row-fluid">
+                            <div class="span12 valor">{{estadisticas.mediaGoals}}</div>
+                        </div>
+                    </div>
+                    <div class="span4 medida">
+                        Entre 1 y 5 unid.
+                        <div class="row-fluid">
+                            <div class="span12 valor">{{estadisticas.goalUltimo}}</div>
+                        </div>
+                    </div>
+                    <div class="span4 medida">
+                        Vacia
+                        <div class="row-fluid">
+                            <div class="span12 valor">Vacía</div>
+                        </div>
                     </div>
                 </div>
-                <div class="span4 medida">
-                    Entre 1 y 5 unid.
-                    <div class="row-fluid">
-                        <div class="span12 valor">{{estadisticas.goalUltimo}}</div>
-                    </div>
-                </div>
-                <div class="span4 medida">
-                    Vacia
-                    <div class="row-fluid">
-                        <div class="span12 valor">Vacía</div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</div>
 </div>
