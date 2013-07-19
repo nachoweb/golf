@@ -7,13 +7,11 @@ head
         #login form{ margin-top:100px; padding:50px;border:2px solid lightgray;}
     link(rel='stylesheet', href='css/bootstrap.css')
     body#login
-        - var hola="Hola "+name
-
         .row-fluid
             .span4
             .zone.span4
                 form(action='/login',method='post')
-                    h3(style="color:red") #{error_msg}
+                    h4(style="color:red;margin-bottom:10px;") #{error_msg}
                     table#login_table
                         tr
                             td Nombre de Usuario
