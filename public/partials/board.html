@@ -1,95 +1,96 @@
-<div class="container-fluid">
+<div class="row-fluid">
     <div ng-include src="'partials/tests.html'" class="span3"></div>
 
     <div class="span9">
-        <div>
-            <div ng-show="isError">
-                <p>No se han encontrado datos para este test </p>
-                <a href="#" ng-click="volver()">Volver</a>
-            </div>
 
-            <div ng-hide="isError">
+        <div ng-show="isError">
+            <p>No se han encontrado datos para este test </p>
+            <a href="#" ng-click="volver()">Volver</a>
+        </div>
 
-                <!-- Cuadro de estadísticas -->
-                <div id="cuadro_estadisticas">
-                    <div>
-                        <h3 class="titulo">{{ data[numTest].name }}</h3>
-                        <div class="row-fluid">
-                            <div class="span4 medida">
-                                <img src='img/flag21x21.png'>
-                                <div class="row-fluid">
-                                    <div class="span12 valor">{{data[numTest].statistics.goals}}</div>
-                                </div>
-                            </div>
-                            <div class="span4 medida">
-                                Entre 1 y 5 unid.
-                                <div class="row-fluid">
-                                    <div class="span12 valor">{{data[numTest].statistics.between1and5metters}}</div>
-                                </div>
-                            </div>
-                            <div class="span4 medida">
-                                + 5 unid.
-                                <div class="row-fluid">
-                                    <div class="span12 valor">{{data[numTest].statistics.more5metters}}</div>
-                                </div>
-                            </div>
-                        </div>
+        <div ng-hide="isError">
+
+            <!-- Cuadro de estadísticas -->
+            <div id="cuadroEstadisticasGlobales">
+
+                <h3>{{ data[numTest].name }}</h3>
+
+                <div class="row-fluid">
+                    <div class="span4 medida">
+                        <img src='img/flag21x21.png'>
+
+                        <div class="valor">{{data[numTest].statistics.goals}}</div>
+
+                    </div>
+                    <div class="span4 medida">
+                        Entre 1 y 5 unid.
+
+                        <div class="valor">{{data[numTest].statistics.between1and5metters}}</div>
+
+                    </div>
+                    <div class="span4 medida">
+                        + 5 unid.
+
+                        <div class="valor">{{data[numTest].statistics.more5metters}}</div>
+
                     </div>
                 </div>
 
-                <!-- Datos del test -->
-                <div class="row-fluid zona">
+            </div>
+
+            <!-- Datos del test -->
+            <div class="row-fluid zona">
                     <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
-                           class="input-large campo" placeholder="Nombre">
+                           class="input-large campo" placeholder="Nombre"/>
                     <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
-                           class="input-large" placeholder="Fecha">
-                </div>
+                           class="input-large campo" placeholder="Fecha"/>
+            </div>
 
 
-                <div class="zona row-fluid">
-                    <div>
-                        <div>
-                            <a ng-click="terminarTestActual(numTest)">
-                                <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">
-                                    <i class="icon-ok icon-white"></i>
-                                    Terminar el Test
-                                </button>
-                            </a>
+            <div class="zona row-fluid">
+                <div>
+                    <div style="text-align: center;">
+                        <a ng-click="terminarTestActual(numTest)">
+                            <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">
+                                <i class="icon-ok icon-white"></i>
+                                Terminar el Test
+                            </button>
+                        </a>
 
-                            <a ng-click="guardarCambios(numTest)">
-                                <button class="btn btn-primary btn-large" ng-disabled="!hayCambios(numTest)">
-                                    <i class="icon-briefcase icon-white"></i>
-                                    Guardar Cambios
-                                </button>
-                            </a>
+                        <a ng-click="guardarCambios(numTest)">
+                            <button class="btn btn-primary btn-large" ng-disabled="!hayCambios(numTest)">
+                                <i class="icon-briefcase icon-white"></i>
+                                Guardar Cambios
+                            </button>
+                        </a>
 
-                            <a ng-click="borrar(numTest)">
-                                <button class="btn btn-primary btn-large">
-                                    <i class="icon-trash icon-white"></i>
-                                    Eliminar Test
-                                </button>
-                            </a>
-                        </div>
+                        <a ng-click="borrar(numTest)">
+                            <button class="btn btn-primary btn-large">
+                                <i class="icon-trash icon-white"></i>
+                                Eliminar Test
+                            </button>
+                        </a>
+                    </div>
 
-                        <!-- Board Container -->
-                        <div class="tablero" ng-class="{opaco:!noTerminado(data[numTest]._id)}">
-                            <table id="board">
-                                <tr ng-repeat="(fila, row) in data[numTest].data">
-                                    <td ng-repeat="(columna,elem) in row" ng-click="boardClick(fila,columna)"
-                                        ng-class="{center:isCenter(data[numTest].data,fila,columna),
+                    <!-- Board Container -->
+                    <div class="tablero" ng-class="{opaco:!noTerminado(data[numTest]._id)}">
+                        <table id="board">
+                            <tr ng-repeat="(fila, row) in data[numTest].data">
+                                <td ng-repeat="(columna,elem) in row" ng-click="boardClick(fila,columna)"
+                                    ng-class="{center:isCenter(data[numTest].data,fila,columna),
                         zero:isZero(fila,columna),
                         uno:elem==1,
                         conBorde:aDistancia5(data[numTest].data,fila,columna)
                         }">
-                                        {{elem}}
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                                    {{elem}}
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
