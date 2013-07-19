@@ -22,17 +22,15 @@ app.configure(function(){
     // MIDDLEWARE
     app.use(express.static(__dirname+'/public'));
     app.use(express.bodyParser());
-    // pass a secret to cookieParser() for signed cookies
-    app.use(express.cookieParser('manny is cool'));
-    // add req.session cookie support
-    app.use(express.cookieSession());
+    app.use(express.cookieParser("3216545sec6eg65ds654"));
+    app.use(express.cookieSession({secret:"sd2c1as65rg54rg6s5fd"}));
 
 })
 
 
 
 app.checkAuth = function(req, res,next){
-   if(!req.session.user_id){
+   if(!req.session.username){
        res.send(500, { error: 'Sesión no iniciada' });
    }
     else{
