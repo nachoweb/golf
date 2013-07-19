@@ -50,8 +50,9 @@ serv.factory('storage', function() {
      * @param newData Nuevo test a guardar
      * @param cb Callback
      */
+    var indiceNuevoTest=0;
     storage.createTest = function(cb){
-
+        indiceNuevoTest++;
         /* Crear un tablero relleno con ceros */
         var dim = 10;
         var m = creaMatriz(dim,dim,0);
@@ -65,8 +66,8 @@ serv.factory('storage', function() {
 
         var test={
             _id: date.getTime(), // ID unívoco
+            name : 'Nuevo test '+indiceNuevoTest,
             data : m,
-            name : 'Nuevo test',
             date : day + '-' + realMonth + '-' + year,
             fecha : new Date(),
             estado : 'no terminado',
@@ -78,10 +79,10 @@ serv.factory('storage', function() {
             }
         };
 
-        console.log("Datos storage: ")
-        console.log(storage.data);
         storage.data.unshift(test);
-        setData(storage.data);
+        var arr=getData();
+        arr.unshift(test);
+        setData(arr);
         cb({err:false,datos:test});
     }
 

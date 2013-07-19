@@ -63,7 +63,7 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
 
             storage.createTest(function (createdData) {
                 if(!createdData.err){
-                    $scope.dataServer.unshift(createdData.datos)
+                    $scope.dataServer.unshift(angular.copy(createdData.datos))
                     $location.path("/test/"+createdData.datos._id);
                 }
             });
