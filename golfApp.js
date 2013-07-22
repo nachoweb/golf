@@ -69,7 +69,6 @@ app.post('/login', function (req, res) {
             }
         });
     });
-
 });
 
 // Cerrar sesión

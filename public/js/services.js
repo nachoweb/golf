@@ -71,11 +71,17 @@ serv.factory('storage', function() {
             date : day + '-' + realMonth + '-' + year,
             fecha : new Date(),
             estado : 'no terminado',
+            palo: 'M3',
+            entrenamiento: 'L',
             statistics:{
+                total:0,
                 goals : 0,
-                between1and5metters: 0,
-                less1metter : 0,
-                more5metters : 0
+                rightBalls: 0,
+                leftBalls:0,
+                longBalls:0,
+                shortBalls:0,
+                less2:0,
+                more2:0
             }
         };
 
@@ -201,6 +207,76 @@ serv.factory('calculosBoard',function () {
            else{
                return false;
            }
+       },
+       // Update test Scores
+       updateScore: function(test, fila, columna){
+           var centro=test.data.length/ 2,
+               difFilas = fila - centro,
+               difColumnas = columna - centro;
+
+           test.statistics.total++;
+
+           // If goal
+           if (difFilas==0 && difColumnas==0){
+               test.statistics.goals++;
+           }
+           // If ball at the right part
+           else if (difColumnas > 0){
+               test.statistics.rightBalls++;
+           // If ball at the left part
+           }else if(difColumnas < 0){
+               test.statistics.leftBalls++;
+           }
+
+           // Short ball
+           if (difFilas > 0){
+              test.statistics.shortBalls++;
+           // Long ball
+           }else if(difFilas < 0){
+               test.statistics.longBalls++;
+           }
+
+           // Is more 2 units
+           var absDifFilas = Math.abs(difFilas);
+           var absDifColumnas = Math.abs(difColumnas);
+           if (absDifFilas > 2 || absDifColumnas>2){
+               test.statistics.more2++;
+           }else if(absDifFilas <= 2 && absDifColumnas <=2){
+               test.statistics.less2++;
+           }
+       },
+       getUpdatedStatistics: function(test){
+           var localStats = {
+               total:0,
+               goals:0,
+               rightBallsPercent: 0,
+               leftBallsPercent: 0,
+               longBallsPercent: 0,
+               shortBallsPercent: 0,
+               less2Percent: 0,
+               more2Percent: 0}
+
+           // Calculate the total balls
+           var total = 0;
+           for(var i=0; i<test.data.length; i++){
+               for( var j=0; j<test.data.length; j++){
+                    total = total + test.data[i][j];
+               }
+           }
+
+           if(total > 0){
+               // Calculate the statistics
+               localStats.total = total;
+               localStats.goals = test.statistics.goals;
+               localStats.rightBallsPercent = ((test.statistics.rightBalls/total)*100).toFixed(2);
+               localStats.leftBallsPercent = ((test.statistics.leftBalls/total)*100).toFixed(2);
+               localStats.longBallsPercent = ((test.statistics.longBalls/total)*100).toFixed(2);
+               localStats.shortBallsPercent = ((test.statistics.shortBalls/total)*100).toFixed(2);
+               localStats.less2Percent = ((test.statistics.less2/total)*100).toFixed(2);
+               localStats.more2Percent = ((test.statistics.more2/total)*100).toFixed(2);
+           }
+
+           return localStats;
        }
    };
 

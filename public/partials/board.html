@@ -16,34 +16,65 @@
                 <h3>{{ data[numTest].name }}</h3>
 
                 <div class="row-fluid">
-                    <div class="span4 medida">
+                    <div class="span2 medida">
+                        Golpes totales
+                        <div class="valor">{{statistics.total}}</div>
+                    </div>
+                    <div class="span2 medida">
                         <img src='img/flag21x21.png'>
-
-                        <div class="valor">{{data[numTest].statistics.goals}}</div>
+                        <div class="valor">{{statistics.goals}}</div>
+                    </div>
+                    <div class="span2 medida">
+                        Por la izquierda
+                        <div class="valor">{{statistics.leftBallsPercent}} % ({{ data[numTest].statistics.leftBalls }})</div>
 
                     </div>
-                    <div class="span4 medida">
-                        Entre 1 y 5 unid.
-
-                        <div class="valor">{{data[numTest].statistics.between1and5metters}}</div>
-
+                    <div class="span2 medida">
+                        Por la derecha
+                        <div class="valor">{{statistics.rightBallsPercent}} % ({{ data[numTest].statistics.rightBalls }})</div>
                     </div>
-                    <div class="span4 medida">
-                        + 5 unid.
-
-                        <div class="valor">{{data[numTest].statistics.more5metters}}</div>
-
+                    <div class="span2 medida">
+                        Cortas
+                        <div class="valor">{{statistics.shortBallsPercent}} % ({{ data[numTest].statistics.shortBalls }})</div>
                     </div>
+                    <div class="span2 medida">
+                        Largas
+                        <div class="valor">{{statistics.longBallsPercent}} % ({{ data[numTest].statistics.longBalls }})</div>
+                    </div>
+
+
                 </div>
+                <div class="row-fluid">
+                    <div class="span2 medida">
+                        < 2 unid
+                        <div class="valor">{{statistics.less2Percent}} % ({{ data[numTest].statistics.less2 }})</div>
+                    </div>
+                    <div class="span2 medida">
+                        > 2 unid
+                        <div class="valor">{{statistics.more2Percent}} % ({{ data[numTest].statistics.more2 }})</div>
+                    </div>
 
+
+                </div>
             </div>
 
             <!-- Datos del test -->
             <div class="row-fluid zona">
-                    <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
-                           class="input-large campo" placeholder="Nombre"/>
-                    <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
-                           class="input-large campo" placeholder="Fecha"/>
+                <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
+                       class="input-medium campo" placeholder="Nombre"/>
+                <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
+                       class="input-medium campo" placeholder="Fecha"/>
+                <select class="campo" ng-model="data[numTest].palo" ng-disabled="!noTerminado(data[numTest]._id)">
+                    <!--<option value='0' selected="selected"> Palo ...</option>-->
+                    <option value='M3' selected="selected"> Madera 3</option>
+                    <option value='H5'> Hierro 5</option>
+                </select>
+                <select class="campo" ng-model="data[numTest].entrenamiento" ng-disabled="!noTerminado(data[numTest]._id)">
+                    <!--<option value='0' selected="selected"> Tipo de entrenamiento ...</option>-->
+                    <option value='L' selected="selected"> Largo</option>
+                    <option value='M'> Medio</option>
+                    <option value='C'> Corto </option>
+                </select>
             </div>
 
 

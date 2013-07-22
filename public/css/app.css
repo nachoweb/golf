@@ -6,20 +6,27 @@ h1{ text-align: center; }
 
 /* id estilos */
 
-#cuerpo {margin: 10px 25px; }
+#cuerpo {margin: 10px 25px;
+    /*background-image:url('../img/grass.jpg');*/
+    background-attachment: fixed;}
 
 #cabeceraTitulo{ border-bottom: 2px solid rgb(86, 130, 177);margin-bottom: 15px; }
-
+/*#cabeceraTitulo{ border-bottom: 2px solid black;margin-bottom: 15px; color:white;}*/
 #cabeceraTitulo > h3{
     margin-left: 60px;
     font-size: 1.7em;
     font-style: italic;
     font-family: "Times New Roman", Times, serif;
     color: rgb(86, 130, 177);
-    display: inline;
-}
+    /*color:white;*/
+    display: inline;}
 #cabeceraTitulo > div{ display: inline;}
-#cabeceraTitulo > div span { font-size: 20px; padding: 0 10px; font-weight: bold; }
+#cabeceraTitulo > div span {
+    font-size: 20px;
+    padding: 0 10px;
+    font-weight: bold;}
+#cabeceraTitulo > div a{
+    text-decoration:none;}
 
 #sidebar{
     background-color: #dcdcdc;
@@ -36,6 +43,13 @@ h1{ text-align: center; }
     margin-top: 10%;
     margin-bottom: 10%;
     text-align:left;}
+#listaTests > li{
+    cursor:pointer;
+    padding-top: 15px;
+    font-style: italic;
+    border-bottom: 2px solid white;}
+#listaTests a{
+    text-decoration:none;}
 
 #board {
     text-align: center;
@@ -84,12 +98,6 @@ h1{ text-align: center; }
     border-radius: 25px 6px 6px 6px;
     padding: 10px 0px;
     margin-bottom: 10px;}
-
-.test{
-    cursor:pointer;
-    padding-top: 15px;
-    font-style: italic;
-    border-bottom: 2px solid white;}
 
 .zero{ color:hsl(240, 45%, 90%); }
 

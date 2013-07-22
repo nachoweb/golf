@@ -71,118 +71,121 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
     }
 ]);
 
-ctrlMod.controller('BoardControl', ['$scope', '$routeParams','$location', 'storage','calculosBoard', function ($scope, $routeParams,$location, storage,calculosBoard){
+ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'storage', 'calculosBoard', function ($scope, $routeParams, $location, storage, calculosBoard) {
+
+    $scope.numTest = calculosBoard.findTestById($scope.data, $routeParams.testId);
+
+    var numTest = $scope.numTest;
+    if (numTest == -1) {
+        $scope.setIsError(true);
+    } else {
+        calculosBoard.idActivo = $routeParams.testId;
+    }
+
+    $scope.statistics = calculosBoard.getUpdatedStatistics($scope.data[numTest]);
 
 
-        /*
-        Si no hay test, descargarlos.
-        Esta situación se da cuando accedemos mediante la ruta /test/id directamente, ya que no se carga el
-        controlador EstadisticasControl y, por tanto, no se descargan los tests.
-         */
-            $scope.numTest=calculosBoard.findTestById($scope.data,$routeParams.testId); /* Cambiar de tablero */
+    /* Function to handle a cell click */
+    $scope.boardClick = function (fil, col) {
 
-            var numTest=$scope.numTest;
-            if(numTest==-1){
-                $scope.setIsError(true);
-            }else{
-                calculosBoard.idActivo=$routeParams.testId;
+        if ($scope.data[numTest].estado === 'no terminado') {
+            $scope.data[numTest].data[fil][col]++;
+
+            calculosBoard.updateScore($scope.data[numTest], fil, col);
+
+
+            $scope.statistics = {
+                total:0,
+                goals: 0,
+                rightBallsPercent: 0,
+                leftBallsPercent: 0,
+                longBallsPercent: 0,
+                shortBallsPercent: 0,
+                less2Percent: 0,
+                more2Percent: 0
             }
 
-        /* Function to handle a cell click */
-        $scope.boardClick = function(fil, col){
+            $scope.statistics = calculosBoard.getUpdatedStatistics($scope.data[numTest]);
+        }
+    }
 
-            if($scope.data[numTest].estado === 'no terminado'){
-                $scope.data[numTest].data[fil][col]++;
+    /* Function to detect a cell containing zero */
+    $scope.isZero = function (r, c) {
+        if ($scope.data[numTest].data[r][c] == 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
-                if($scope.isCenter($scope.data[numTest].data,fil,col)){
-                    $scope.data[numTest].statistics.goals++;
+    $scope.aDistancia5 = calculosBoard.aDistancia5;
+
+    $scope.volver = function () {
+        $scope.setIsError(false);
+        $location.path("/");
+    }
+
+    /**
+     * Función para detectar cambios en los datos y habilitar así el botón Guardar Cambios
+     * @returns {boolean} Si hay o no cambios en un determinado test
+     */
+    $scope.hayCambios = function (t) {
+        return !angular.equals($scope.data[t], $scope.dataServer[t]);
+    }
+
+    $scope.guardarCambios = function (numTest) {
+
+        storage.update($scope.data[numTest], function (data) {
+            if (data.err) {
+                console.log("Error actualizando test");
+            } else {
+                $scope.dataServer[numTest] = angular.copy($scope.data[numTest]);
+                console.log('Test actualizado en el servidor');
+            }
+        });
+
+    }
+
+    /**
+     * Eliminar el test actual
+     */
+    $scope.borrar = function (numTest) {
+        if (confirm("¿Está seguro de que desea borrar el test?")) {
+
+            console.log("Test a eliminar: " + $scope.data[numTest])
+
+            // Eliminar del servidor
+            storage.remove($scope.data[numTest], function (data) {
+                if (!data.err) {
+                    $scope.dataServer.splice(data.index, 1);
+                    // No consigo que se ejecute
+                    console.log('Test eliminado del servidor');
+                    $location.path('/test');
+                } else {
+                    console.log("Error al eliminar test");
                 }
-                else if(calculosBoard.isBetw15($scope.data[numTest].data,fil,col)){
-                    $scope.data[numTest].statistics.between1and5metters++;
-                }
-                else if(calculosBoard.isMor5($scope.data[numTest].data,fil,col)){
-                    $scope.data[numTest].statistics.more5metters++;
-                }
-            }
+            });
         }
+    }
 
-        /* Function to detect a cell containing zero */
-        $scope.isZero = function(r,c){
-            if($scope.data[numTest].data[r][c] == 0){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
+    $scope.terminarTestActual = function (numTest) {
 
-        $scope.aDistancia5 = calculosBoard.aDistancia5;
+        if (confirm("¿Está seguro de que desea terminar el test? Después no podrá ser modificado.")) {
 
-        $scope.volver = function(){
-            $scope.setIsError(false);
-            $location.path("/");
-        }
-
-        /**
-         * Función para detectar cambios en los datos y habilitar así el botón Guardar Cambios
-         * @returns {boolean} Si hay o no cambios en un determinado test
-         */
-        $scope.hayCambios = function (t) {
-            return !angular.equals($scope.data[t], $scope.dataServer[t]);
-        }
-
-        $scope.guardarCambios = function(numTest){
-
-            storage.update($scope.data[numTest], function(data){
-                if(data.err){
-                    console.log("Error actualizando test");
-                }else{
-                    $scope.dataServer[numTest] = angular.copy($scope.data[numTest]);
-                    console.log('Test actualizado en el servidor');
+            $scope.data[numTest].estado = 'terminado';
+            storage.update($scope.data[numTest], function (data) {
+                if (!data.err) {
+                    console.log('Test actualizado en el servidor:');
+                    $scope.dataServer[data.index] = angular.copy($scope.data[data.index]);
+                } else {
+                    console.log("Error al terminar test");
                 }
             });
 
         }
-
-        /**
-         * Eliminar el test actual
-         */
-        $scope.borrar = function(numTest){
-            if (confirm("¿Está seguro de que desea borrar el test?")) {
-
-                console.log("Test a eliminar: " + $scope.data[numTest])
-
-                // Eliminar del servidor
-                storage.remove($scope.data[numTest], function(data){
-                    if(!data.err){
-                        $scope.dataServer.splice(data.index,1);
-                        // No consigo que se ejecute
-                        console.log('Test eliminado del servidor');
-                        $location.path('/test');
-                    }else{
-                        console.log("Error al eliminar test");
-                    }
-                });
-            }
-        }
-
-        $scope.terminarTestActual = function(numTest){
-
-            if (confirm("¿Está seguro de que desea terminar el test? Después no podrá ser modificado.")) {
-
-                $scope.data[numTest].estado = 'terminado';
-                storage.update($scope.data[numTest], function(data){
-                    if(!data.err){
-                        console.log('Test actualizado en el servidor:');
-                        $scope.dataServer[data.index] = angular.copy($scope.data[data.index]);
-                    }else{
-                        console.log("Error al terminar test");
-                    }
-                });
-
-            }
-        }
     }
+}
 ]);
 
 ctrlMod.controller('EstadisticasGlobalControl',['$scope','estadisticasGlobales',function (scope,estadisticasGlobales) {
