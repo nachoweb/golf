@@ -277,6 +277,32 @@ serv.factory('calculosBoard',function () {
            }
 
            return localStats;
+       },
+       checkBorder: function(data, fila, columna){
+           var valor = 0;
+           var centro=data.length/ 2,
+               difFilas = fila - centro,
+               difColumnas = columna - centro;
+
+           if (difFilas==-2 && difColumnas==-2) {
+               valor = 1;
+           }else if (difFilas==-2 && difColumnas>-2 && difColumnas<2){
+               valor = 2;
+           }else if (difFilas==-2 && difColumnas==2) {
+               valor = 3;
+           }else if (difColumnas==2 && difFilas>-2 && difFilas<2){
+               valor = 4;
+           }else if (difFilas==2 && difColumnas==2) {
+               valor = 5;
+           }else if (difFilas==2 && difColumnas>-2 && difColumnas<2){
+               valor = 6;
+           }else if (difFilas==2 && difColumnas==-2) {
+               valor = 7;
+           }else if (difColumnas==-2 && difFilas>-2 && difFilas<2){
+               valor = 8;
+           }
+
+           return valor;
        }
    };
 

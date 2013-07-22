@@ -5,6 +5,7 @@ html(lang='en', ng-app='golfModule')
     head
         meta(charset='utf-8')
         title Golf App
+        link(rel="shortcut icon",href="img/favicon.ico")
         link(rel='stylesheet', href='css/app.css')
         link(rel='stylesheet', href='css/bootstrap.css')
         script(type='text/javascript').
@@ -18,12 +19,13 @@ html(lang='en', ng-app='golfModule')
         //script(src='js/filters.js')
         //script(src='js/directives.js')
     body#cuerpo(ng-controller='MainControl')
-        div#cabeceraTitulo
-            a(href="/"): img(src="img/home.png",style="position:absolute;width:35px;top: 3px; left: 20px;")
-            h3  Aplicación web para golfistas profesionales
-            .pull-right
+        #cabeceraTitulo
+            a#home(href='#')
+                img(src='./img/home.png', style='position: absolute; width: 35px; top: 0px; left: 20px;')
+            div
                 span {{ username }}
-                a(ng-href="/logout")
+                a(ng-href="logout")
                     i.icon-off
-                    |Cerrar sesión
+                    | Cerrar sesión
+            p  Aplicación web para golfistas profesionales
         div(ng-view='ng-view')

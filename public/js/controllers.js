@@ -120,6 +120,7 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
     }
 
     $scope.aDistancia5 = calculosBoard.aDistancia5;
+    $scope.checkBorder = calculosBoard.checkBorder;
 
     $scope.volver = function () {
         $scope.setIsError(false);

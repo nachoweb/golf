@@ -11,54 +11,34 @@
         <div ng-hide="isError">
 
             <!-- Cuadro de estadísticas -->
-            <div id="cuadroEstadisticasGlobales">
-
-                <h3>{{ data[numTest].name }}</h3>
-
-                <div class="row-fluid">
-                    <div class="span2 medida">
-                        Golpes totales
-                        <div class="valor">{{statistics.total}}</div>
-                    </div>
-                    <div class="span2 medida">
-                        <img src='img/flag21x21.png'>
-                        <div class="valor">{{statistics.goals}}</div>
-                    </div>
-                    <div class="span2 medida">
-                        Por la izquierda
-                        <div class="valor">{{statistics.leftBallsPercent}} % ({{ data[numTest].statistics.leftBalls }})</div>
-
-                    </div>
-                    <div class="span2 medida">
-                        Por la derecha
-                        <div class="valor">{{statistics.rightBallsPercent}} % ({{ data[numTest].statistics.rightBalls }})</div>
-                    </div>
-                    <div class="span2 medida">
-                        Cortas
-                        <div class="valor">{{statistics.shortBallsPercent}} % ({{ data[numTest].statistics.shortBalls }})</div>
-                    </div>
-                    <div class="span2 medida">
-                        Largas
-                        <div class="valor">{{statistics.longBallsPercent}} % ({{ data[numTest].statistics.longBalls }})</div>
-                    </div>
-
-
-                </div>
-                <div class="row-fluid">
-                    <div class="span2 medida">
-                        < 2 unid
-                        <div class="valor">{{statistics.less2Percent}} % ({{ data[numTest].statistics.less2 }})</div>
-                    </div>
-                    <div class="span2 medida">
-                        > 2 unid
-                        <div class="valor">{{statistics.more2Percent}} % ({{ data[numTest].statistics.more2 }})</div>
-                    </div>
-
-
-                </div>
+            <h3 id="nombreTest">{{ data[numTest].name }} ({{ data[numTest].palo }} {{ data[numTest].entrenamiento }} {{ data[numTest].date }})</h3>
+            <div class="zona">
+                <table id="tablaEstadisticas">
+                    <tr>
+                        <th class="golpesTotales"> Golpes totales</th>
+                        <th><img src="./img/flag21x21.png"></th>
+                        <th> Por la izquierda</th>
+                        <th> Por la derecha</th>
+                        <th> Cortas</th>
+                        <th> Largas</th>
+                        <th> &le; 2 unid.</th>
+                        <th> > 2 unid.</th>
+                    </tr>
+                    <tr>
+                        <td class="golpesTotales"> {{statistics.total}}</td>
+                        <td> {{statistics.goals}}</td>
+                        <td> {{statistics.leftBallsPercent}}% ({{ data[numTest].statistics.leftBalls }})</td>
+                        <td> {{statistics.rightBallsPercent}}% ({{ data[numTest].statistics.rightBalls }})</td>
+                        <td> {{statistics.shortBallsPercent}}% ({{ data[numTest].statistics.shortBalls }})</td>
+                        <td> {{statistics.longBallsPercent}}% ({{ data[numTest].statistics.longBalls }})</td>
+                        <td> {{statistics.less2Percent}}% ({{ data[numTest].statistics.less2 }})</td>
+                        <td> {{statistics.more2Percent}}% ({{ data[numTest].statistics.more2 }})</td>
+                    </tr>
+                </table>
             </div>
 
             <!-- Datos del test -->
+            <div class="zona">
             <div class="row-fluid zona">
                 <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
                        class="input-medium campo" placeholder="Nombre"/>
@@ -109,16 +89,23 @@
                             <tr ng-repeat="(fila, row) in data[numTest].data">
                                 <td ng-repeat="(columna,elem) in row" ng-click="boardClick(fila,columna)"
                                     ng-class="{center:isCenter(data[numTest].data,fila,columna),
-                        zero:isZero(fila,columna),
-                        uno:elem==1,
-                        conBorde:aDistancia5(data[numTest].data,fila,columna)
-                        }">
+                                               zero:isZero(fila,columna),
+                                                borderLeftTop: checkBorder(data[numTest].data,fila,columna)==1,
+                                                borderTop: checkBorder(data[numTest].data,fila,columna)==2,
+                                                borderTopRight: checkBorder(data[numTest].data,fila,columna)==3,
+                                                borderRight: checkBorder(data[numTest].data,fila,columna)==4,
+                                                borderRightBottom: checkBorder(data[numTest].data,fila,columna)==5,
+                                                borderBottom: checkBorder(data[numTest].data,fila,columna)==6,
+                                                borderBottomLeft: checkBorder(data[numTest].data,fila,columna)==7,
+                                                borderLeft: checkBorder(data[numTest].data,fila,columna)==8}">
                                     {{elem}}
                                 </td>
                             </tr>
                         </table>
+                        <img id="golfista" src='../img/golfista.PNG'>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
