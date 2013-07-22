@@ -11,7 +11,9 @@
         <div ng-hide="isError">
 
             <!-- Cuadro de estadísticas -->
-            <h3 id="nombreTest">{{ data[numTest].name }} ({{ data[numTest].palo }} {{ data[numTest].entrenamiento }} {{ data[numTest].date }})</h3>
+            <h3 id="nombreTest">{{ data[numTest].name }} ({{ data[numTest].palo }} {{ data[numTest].entrenamiento }} {{
+                data[numTest].date }})</h3>
+
             <div class="zona">
                 <table id="tablaEstadisticas">
                     <tr>
@@ -38,28 +40,29 @@
             </div>
 
             <!-- Datos del test -->
-            <div class="zona">
             <div class="row-fluid zona">
-                <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
-                       class="input-medium campo" placeholder="Nombre"/>
-                <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
-                       class="input-medium campo" placeholder="Fecha"/>
-                <select class="campo" ng-model="data[numTest].palo" ng-disabled="!noTerminado(data[numTest]._id)">
-                    <!--<option value='0' selected="selected"> Palo ...</option>-->
-                    <option value='M3' selected="selected"> Madera 3</option>
-                    <option value='H5'> Hierro 5</option>
-                </select>
-                <select class="campo" ng-model="data[numTest].entrenamiento" ng-disabled="!noTerminado(data[numTest]._id)">
-                    <!--<option value='0' selected="selected"> Tipo de entrenamiento ...</option>-->
-                    <option value='L' selected="selected"> Largo</option>
-                    <option value='M'> Medio</option>
-                    <option value='C'> Corto </option>
-                </select>
+                <div style="text-align: center;">
+                    <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
+                           class="input-medium campo" placeholder="Nombre"/>
+                    <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
+                           class="input-medium campo" placeholder="Fecha"/>
+                    <select class="campo" ng-model="data[numTest].palo" ng-disabled="!noTerminado(data[numTest]._id)">
+                        <!--<option value='0' selected="selected"> Palo ...</option>-->
+                        <option value='M3' selected="selected"> Madera 3</option>
+                        <option value='H5'> Hierro 5</option>
+                    </select>
+                    <select class="campo" ng-model="data[numTest].entrenamiento"
+                            ng-disabled="!noTerminado(data[numTest]._id)">
+                        <!--<option value='0' selected="selected"> Tipo de entrenamiento ...</option>-->
+                        <option value='L' selected="selected"> Largo</option>
+                        <option value='M'> Medio</option>
+                        <option value='C'> Corto</option>
+                    </select>
+                </div>
             </div>
 
 
             <div class="zona row-fluid">
-                <div>
                     <div style="text-align: center;">
                         <a ng-click="terminarTestActual(numTest)">
                             <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">
@@ -102,10 +105,8 @@
                                 </td>
                             </tr>
                         </table>
-                        <img id="golfista" src='../img/golfista.PNG'>
                     </div>
-                </div>
-            </div>
+                    <div style="text-align:center ;"><img style="width:30px;" src='./img/golfista.PNG'></div>
             </div>
         </div>
 

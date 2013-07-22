@@ -54,7 +54,7 @@ serv.factory('storage', function() {
     storage.createTest = function(cb){
         indiceNuevoTest++;
         /* Crear un tablero relleno con ceros */
-        var dim = 10;
+        var dim = 9;
         var m = creaMatriz(dim,dim,0);
 
         /* Obtener fecha */
@@ -280,7 +280,7 @@ serv.factory('calculosBoard',function () {
        },
        checkBorder: function(data, fila, columna){
            var valor = 0;
-           var centro=data.length/ 2,
+           var centro=Math.floor(data.length/ 2),
                difFilas = fila - centro,
                difColumnas = columna - centro;
 

@@ -60,7 +60,7 @@ h1{ text-align: center; }
     width: 100%;}
 #board td{
     width: 30px;
-    height: 30px;
+    height: 40px;
     text-align: center;}
 #board td.center{
     border: 2px dashed rgba(0, 0, 0, 0.28);}
@@ -118,10 +118,6 @@ h1{ text-align: center; }
 #nombreTest{
     font-family: "Times New Roman", Times, serif;}
 
-#golfista{
-
-}
-
 /* FIN id estilos */
 
 /* clases útiles */
@@ -136,13 +132,12 @@ h1{ text-align: center; }
 
 .btn{ margin: 10px; }
 
+/** esto debería ser un id en vez de ser una clase útil **/
 .tablero{
-    padding: 20px;
+    padding: 10px;
     border-radius: 25px 25px 25px 25px;
-    width: 324px;
-    margin: auto;
-    margin-top: 4%;
-    margin-bottom: 4%;
+    width: 70%;
+    margin:10px auto;
     background-image: url('../img/grassTexture.jpg');
     background-size: contain;
     text-align: center;}
