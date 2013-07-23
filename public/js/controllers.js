@@ -19,6 +19,7 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         $scope.isCenter=calculosBoard.isCenter;
         $scope.data=[];
         $scope.dataServer=[];
+        $scope.pantallaCompleta = false;
 
         storage.query(function (data) {
             $scope.data=data; //$scope.data será una referencia a storage.data
@@ -67,6 +68,14 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
                     $location.path("/test/"+createdData.datos._id);
                 }
             });
+        }
+
+        $scope.cambiarPantallaCompleta = function(){
+            if($scope.pantallaCompleta){
+                $scope.pantallaCompleta = false;
+            }else{
+                $scope.pantallaCompleta = true;
+            }
         }
     }
 ]);

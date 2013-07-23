@@ -4,10 +4,13 @@ html(lang='en', ng-app='golfModule')
 
     head
         meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width', initial-scale=1.0)
         title Golf App
+        link(href='css/bootstrap.css', rel='stylesheet')
+        link(href='css/bootstrap-responsive.min.css', rel='stylesheet')
         link(rel="shortcut icon",href="img/favicon.ico")
         link(rel='stylesheet', href='css/app.css')
-        link(rel='stylesheet', href='css/bootstrap.css')
+
         script(type='text/javascript').
             GolfApp={};
             GolfApp.username= "#{username}";
@@ -16,10 +19,8 @@ html(lang='en', ng-app='golfModule')
         script(src='js/controllers.js')
         script(src='js/routes.js')
         script(src='js/services.js')
-        //script(src='js/filters.js')
-        //script(src='js/directives.js')
     body#cuerpo(ng-controller='MainControl')
-        #cabeceraTitulo
+        #cabeceraTitulo(ng-class="{ocultar:pantallaCompleta}")
             a#home(href='#')
                 img(src='./img/home.png', style='position: absolute; width: 35px; top: 0px; left: 20px;')
             div

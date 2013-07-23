@@ -1,5 +1,5 @@
 <div class="row-fluid">
-    <div ng-include src="'partials/tests.html'" class="span3"></div>
+    <div ng-include src="'partials/tests.html'"  ng-class="{span3: !pantallaCompleta, ocultar:pantallaCompleta}"></div>
 
     <div class="span9">
 
@@ -9,8 +9,7 @@
         </div>
 
         <div ng-hide="isError">
-            <div class="zona">
-                <p class="etiqueta">Estadísticas</p>
+            <div ng-class="{zona: true, ocultar: pantallaCompleta}">
                 <h3 id="nombreTest">{{ data[numTest].name }} ({{ data[numTest].palo }} {{ data[numTest].entrenamiento }} {{
                     data[numTest].date }})</h3>
                 <table id="tablaEstadisticas">
@@ -38,8 +37,7 @@
             </div>
 
             <!-- Datos del test -->
-            <div class="row-fluid zona">
-                <p class="etiqueta">Datos</p>
+            <div class="row-fluid zona" ng-class="{ocultar:pantallaCompleta}">
                 <div style="text-align: center;">
                     <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
                            class="input-medium campo" placeholder="Nombre"/>
@@ -62,7 +60,6 @@
 
 
             <div class="zona row-fluid">
-                <p class="etiqueta">Campo</p>
                     <div style="text-align: center;">
                         <a ng-click="terminarTestActual(numTest)">
                             <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">
@@ -82,6 +79,11 @@
                             <button class="btn btn-primary btn-large">
                                 <i class="icon-trash icon-white"></i>
                                 Eliminar Test
+                            </button>
+                        </a>
+                        <a ng-click="cambiarPantallaCompleta()">
+                            <button class="btn btn-primary btn-large">
+                                <i class="icon-fullscreen icon-white"></i>
                             </button>
                         </a>
                     </div>

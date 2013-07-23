@@ -1,15 +1,14 @@
-/* estilos globales */
+/*** estilos globales ***/
 
 h1{ text-align: center; }
 
-/* FIN estilos globales */
+/*** FIN estilos globales ***/
 
-/* id estilos */
+/*** id estilos ***/
 
 #cuerpo {margin: 10px 25px;
     background-attachment: fixed;}
 
-/*#cabeceraTitulo{ border-bottom: 2px solid rgb(86, 130, 177);margin-bottom: 15px; }*/
 #cabeceraTitulo{
     border-bottom: 2px solid rgb(86, 130, 177);
     margin-bottom: 15px;
@@ -36,7 +35,8 @@ h1{ text-align: center; }
     border-radius: 25px 6px 6px 6px;
     margin:0;
     padding: 15px;
-    text-align: center;}
+    text-align: center;
+    margin-bottom: 10px;}
 
 #listaTests{
     margin: 2%;
@@ -192,6 +192,10 @@ h1{ text-align: center; }
     color: rgb(86, 130, 177);
     font-variant: small-caps;
     position: absolute;}
+
+.ocultar{
+    display:none;
+}
     /* FIN clases útiles */
 
 
