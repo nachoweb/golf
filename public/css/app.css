@@ -101,24 +101,40 @@ a:hover {
 #cuadroEstadisticasGlobales > div{
     margin-top: 10px;}
 
-#tablaEstadisticas{
+table.tablaEstadisticas{
     width: 90%;
     text-align: center;
     margin:auto;
     font-family: "Times New Roman", Times, serif;
     font-variant: small-caps;
     font-size: 14px;}
-#tablaEstadisticas .golpesTotales{
+table.tablaEstadisticas .golpesTotales{
     font-weight: bold;}
-#tablaEstadisticas td{
+table.tablaEstadisticas td{
     padding: 5px;
     background: rgba(2, 74, 151, 0.61);
     color: white;
-    font-style: normal;}
-#tablaEstadisticas td:nth-child(n+2){border-left:1px solid #dcdcdc;}
-#tablaEstadisticas > h3{
+    font-style: normal;
+}
+table.tablaEstadisticas td:nth-child(n+2){border-left:1px solid #dcdcdc;}
+table.tablaEstadisticas > h3{
     font-size: 1.3em;
     font-family: "Times New Roman", Times, serif;}
+
+table.tablaEstadisticas.parciales{
+    width: 80%; margin-top: 10px; font-size: 13px;
+}
+
+table.tablaEstadisticas.parciales tr:nth-child(n+3) td{
+    border-top: 2px solid white;
+}
+table.tablaEstadisticas.parciales td.tipoPalo{
+    background-color: transparent;
+    border:0 !important;
+    color: black;
+}
+
+
 
 #home:hover img{
     -webkit-transform: scale(1.3);
