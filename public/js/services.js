@@ -289,115 +289,50 @@ serv.factory('calculosBoard',function () {
            return valor;
        },
        computeGlobalStatistics: function(tests){
-           var localStats = {
-               totales: {total: 0,
-                   goals: 0,
-                   rightBalls: 0,
-                   leftBalls: 0,
-                   longBalls: 0,
-                   shortBalls: 0,
-                   less2: 0,
-                   more2: 0,
-                   rightBallsPercent: 0,
-                   leftBallsPercent: 0,
-                   longBallsPercent: 0,
-                   shortBallsPercent: 0,
-                   less2Percent: 0,
-                   more2Percent: 0},
-               parciales: {
-                   h5:{total: 0,
-                       goals: 0,
-                       rightBalls: 0,
-                       leftBalls: 0,
-                       longBalls: 0,
-                       shortBalls: 0,
-                       less2: 0,
-                       more2: 0,
-                       rightBallsPercent: 0,
-                       leftBallsPercent: 0,
-                       longBallsPercent: 0,
-                       shortBallsPercent: 0,
-                       less2Percent: 0,
-                       more2Percent: 0
-                   },
-                   h4:{total: 0,
-                       goals: 0,
-                       rightBalls: 0,
-                       leftBalls: 0,
-                       longBalls: 0,
-                       shortBalls: 0,
-                       less2: 0,
-                       more2: 0,
-                       rightBallsPercent: 0,
-                       leftBallsPercent: 0,
-                       longBallsPercent: 0,
-                       shortBallsPercent: 0,
-                       less2Percent: 0,
-                       more2Percent: 0}
-                }
-           };
+
            var stats={totales:{},parciales:{}}
            angular.forEach(tests, function (value, key) {
-               stats.totales={total: (stats.totales["total"] | 0)+value["statistics"]["total"],
-                   goals: 0,
-                   rightBalls: 0,
-                   leftBalls: 0,
-                   longBalls: 0,
-                   shortBalls: 0,
-                   less2: 0,
-                   more2: 0
+               stats.totales={
+                   total: (stats.totales["total"] | 0)+value["statistics"]["total"],
+                   goals: (stats.totales["goals"] | 0)+value["statistics"]["goals"],
+                   rightBalls: (stats.totales["rightBalls"] | 0) + value["statistics"]["rightBalls"],
+                   leftBalls: (stats.totales["leftBalls"] | 0)+value["statistics"]["leftBalls"],
+                   longBalls: (stats.totales["longBalls"] | 0)+value["statistics"]["longBalls"],
+                   shortBalls: (stats.totales["shortBalls"] | 0)+value["statistics"]["shortBalls"],
+                   less2: (stats.totales["less2"] | 0)+value["statistics"]["less2"],
+                   more2: (stats.totales["more2"] | 0)+value["statistics"]["more2"]
                };
                stats.parciales[value["palo"]]= stats.parciales[value["palo"]] || {};
-               stats.parciales[value["palo"]]={total: (stats.parciales[value["palo"]]["total"] | 0)+value["statistics"]["total"],
-                   goals: 0,
-                   rightBalls: 0,
-                   leftBalls: 0,
-                   longBalls: 0,
-                   shortBalls: 0,
-                   less2: 0,
-                   more2: 0
+               stats.parciales[value["palo"]]={
+                   total: (stats.parciales[value["palo"]]["total"] | 0)+value["statistics"]["total"],
+                   goals: (stats.parciales[value["palo"]]["goals"] | 0)+value["statistics"]["goals"],
+                   rightBalls: (stats.parciales[value["palo"]]["rightBalls"] | 0)+value["statistics"]["rightBalls"],
+                   leftBalls: (stats.parciales[value["palo"]]["leftBalls"] | 0)+value["statistics"]["leftBalls"],
+                   longBalls: (stats.parciales[value["palo"]]["longBalls"] | 0)+value["statistics"]["longBalls"],
+                   shortBalls: (stats.parciales[value["palo"]]["shortBalls"] | 0)+value["statistics"]["shortBalls"],
+                   less2: (stats.parciales[value["palo"]]["less2"] | 0)+value["statistics"]["less2"],
+                   more2: (stats.parciales[value["palo"]]["more2"] | 0)+value["statistics"]["more2"]
                };
            });
 
-           stats.totales["rightBallsPercent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["rightBalls"]*100/stats.parciales[key]["total"];
-           stats.parciales[key]["leftBallsPercent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["leftBalls"]*100/stats.parciales[key]["total"];
-           stats.parciales.leftBallsPercent
-           stats.parciales.rightBallsPercent
-           stats.parciales.rightBallsPercent
-           stats.parciales.rightBallsPercent
-           stats.parciales.rightBallsPercent
+           stats.totales["rightBallsPercent"]=stats.totales["total"]==0 ? 0 : stats.totales["rightBalls"]*100/stats.totales["total"];
+           stats.totales["leftBallsPercent"]=stats.totales["total"]==0 ? 0 : stats.totales["leftBalls"]*100/stats.totales["total"];
+           stats.totales["longBallsPercent"]=stats.totales["total"]==0 ? 0 : stats.totales["longBalls"]*100/stats.totales["total"];
+           stats.totales["shortBallsPercent"]=stats.totales["total"]==0 ? 0 : stats.totales["shortBalls"]*100/stats.totales["total"];
+           stats.totales["more2Percent"]=stats.totales["total"]==0 ? 0 : stats.totales["more2"]*100/stats.totales["total"];
+           stats.totales["less2Percent"]=stats.totales["total"]==0 ? 0 : stats.totales["less2"]*100/stats.totales["total"];
 
            angular.forEach(stats.parciales, function (value, key) {
                stats.parciales[key]["rightBallsPercent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["rightBalls"]*100/stats.parciales[key]["total"];
                stats.parciales[key]["leftBallsPercent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["leftBalls"]*100/stats.parciales[key]["total"];
-               stats.parciales.leftBallsPercent
-               stats.parciales.rightBallsPercent
-               stats.parciales.rightBallsPercent
-               stats.parciales.rightBallsPercent
-               stats.parciales.rightBallsPercent
+               stats.parciales[key]["longBallsPercent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["longBalls"]*100/stats.parciales[key]["total"];
+               stats.parciales[key]["shortBallsPercent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["shortBalls"]*100/stats.parciales[key]["total"];
+               stats.parciales[key]["more2Percent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["more2"]*100/stats.parciales[key]["total"];
+               stats.parciales[key]["less2Percent"]=stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["less2"]*100/stats.parciales[key]["total"];
            });
 
-           /*// Calculate the total balls
-           var total = 0;
-           for(var i=0; i<test.data.length; i++){
-               for( var j=0; j<test.data.length; j++){
-                   total = total + test.data[i][j];
-               }
-           }
 
-           if(total > 0){
-               // Calculate the statistics
-               localStats.total = total;
-               localStats.goals = test.statistics.goals;
-               localStats.rightBallsPercent = ((test.statistics.rightBalls/total)*100).toFixed(2);
-               localStats.leftBallsPercent = ((test.statistics.leftBalls/total)*100).toFixed(2);
-               localStats.longBallsPercent = ((test.statistics.longBalls/total)*100).toFixed(2);
-               localStats.shortBallsPercent = ((test.statistics.shortBalls/total)*100).toFixed(2);
-               localStats.less2Percent = ((test.statistics.less2/total)*100).toFixed(2);
-               localStats.more2Percent = ((test.statistics.more2/total)*100).toFixed(2);
-           }*/
-
-           return localStats;
+           return stats;
        }
    };
 
