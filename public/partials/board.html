@@ -9,12 +9,10 @@
         </div>
 
         <div ng-hide="isError">
-
-            <!-- Cuadro de estadísticas -->
-            <h3 id="nombreTest">{{ data[numTest].name }} ({{ data[numTest].palo }} {{ data[numTest].entrenamiento }} {{
-                data[numTest].date }})</h3>
-
             <div class="zona">
+                <p class="etiqueta">Estadísticas</p>
+                <h3 id="nombreTest">{{ data[numTest].name }} ({{ data[numTest].palo }} {{ data[numTest].entrenamiento }} {{
+                    data[numTest].date }})</h3>
                 <table id="tablaEstadisticas">
                     <tr>
                         <th class="golpesTotales"> Golpes totales</th>
@@ -29,23 +27,24 @@
                     <tr>
                         <td class="golpesTotales"> {{statistics.total}}</td>
                         <td> {{statistics.goals}}</td>
-                        <td> {{statistics.leftBallsPercent}}% ({{ data[numTest].statistics.leftBalls }})</td>
-                        <td> {{statistics.rightBallsPercent}}% ({{ data[numTest].statistics.rightBalls }})</td>
-                        <td> {{statistics.shortBallsPercent}}% ({{ data[numTest].statistics.shortBalls }})</td>
-                        <td> {{statistics.longBallsPercent}}% ({{ data[numTest].statistics.longBalls }})</td>
-                        <td> {{statistics.less2Percent}}% ({{ data[numTest].statistics.less2 }})</td>
-                        <td> {{statistics.more2Percent}}% ({{ data[numTest].statistics.more2 }})</td>
+                        <td> {{statistics.leftBallsPercent}}% <br>({{ data[numTest].statistics.leftBalls }})</td>
+                        <td> {{statistics.rightBallsPercent}}% <br>({{ data[numTest].statistics.rightBalls }})</td>
+                        <td> {{statistics.shortBallsPercent}}% <br>({{ data[numTest].statistics.shortBalls }})</td>
+                        <td> {{statistics.longBallsPercent}}% <br>({{ data[numTest].statistics.longBalls }})</td>
+                        <td> {{statistics.less2Percent}}% <br>({{ data[numTest].statistics.less2 }})</td>
+                        <td> {{statistics.more2Percent}}% <br>({{ data[numTest].statistics.more2 }})</td>
                     </tr>
                 </table>
             </div>
 
             <!-- Datos del test -->
             <div class="row-fluid zona">
+                <p class="etiqueta">Datos</p>
                 <div style="text-align: center;">
                     <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
                            class="input-medium campo" placeholder="Nombre"/>
                     <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
-                           class="input-medium campo" placeholder="Fecha"/>
+                           class="campo" placeholder="Fecha"/>
                     <select class="campo" ng-model="data[numTest].palo" ng-disabled="!noTerminado(data[numTest]._id)">
                         <!--<option value='0' selected="selected"> Palo ...</option>-->
                         <option value='M3' selected="selected"> Madera 3</option>
@@ -63,6 +62,7 @@
 
 
             <div class="zona row-fluid">
+                <p class="etiqueta">Campo</p>
                     <div style="text-align: center;">
                         <a ng-click="terminarTestActual(numTest)">
                             <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">

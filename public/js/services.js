@@ -170,7 +170,7 @@ serv.factory('calculosBoard',function () {
            return index;
        },
        isMor5:function (data,fila,columna) {
-           var centro = data.length/2;
+           var centro = Math.floor(data.length/2);
            var diff_x = Math.abs(fila-centro);
            var diff_y = Math.abs(columna-centro);
 
@@ -182,7 +182,7 @@ serv.factory('calculosBoard',function () {
            }
        },
        isBetw15:function (data,fila,columna) {
-           var centro = data.length/2;
+           var centro = Math.floor(data.length/2);
            var diff_x = Math.abs(fila-centro);
            var diff_y = Math.abs(columna-centro);
 
@@ -195,7 +195,7 @@ serv.factory('calculosBoard',function () {
            }
        },
        aDistancia5:function (data,fila,columna) {
-           var centro=data.length/ 2,
+           var centro=Math.floor(data.length/ 2),
                dif_filas = Math.abs(fila - centro),
                dif_columnas = Math.abs(columna - centro);
 
@@ -210,7 +210,7 @@ serv.factory('calculosBoard',function () {
        },
        // Update test Scores
        updateScore: function(test, fila, columna){
-           var centro=test.data.length/ 2,
+           var centro=Math.floor(test.data.length/ 2),
                difFilas = fila - centro,
                difColumnas = columna - centro;
 
