@@ -16,6 +16,12 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         $scope.data=[];
         $scope.dataServer=[];
         $scope.pantallaCompleta = false;
+        $scope.palos = [
+            {codigo: 'H1', nombre:'Hierro 1'},
+            {codigo: 'H2', nombre:'Hierro 2'},
+            {codigo: 'H3', nombre:'Hierro 3'},
+            {codigo: 'M1', nombre:'Madera 1'}
+        ];
 
         storage.query(function (data) {
             $scope.data=data; //$scope.data será una referencia a storage.data
@@ -36,6 +42,9 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
             return calculosBoard.idActivo;
         }
 
+        $scope.resetIdActivo=function(){
+            calculosBoard.idActivo = 0;
+        }
 
         $scope.username = window.GolfApp.username;
 
@@ -195,5 +204,6 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
 ]);
 
 ctrlMod.controller('EstadisticasGlobalesControl',['$scope','calculosBoard',function (scope,calculosBoard) {
+    calculosBoard.resetIdActivo();
     scope.statistics = calculosBoard.computeGlobalStatistics(scope.data);
 }]);

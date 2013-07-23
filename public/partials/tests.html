@@ -8,7 +8,7 @@
             <li ng-repeat="(index, test) in data | filter:query" class="test">
                 <a ng-href="#/test/{{test._id}}"
                    ng-class="{testNoTerminado:noTerminado(test._id)}">
-                    {{test.name}} ({{ test.entrenamiento }} {{ test.palo }} {{test.date}})
+                    {{test.name}} ({{ test.entrenamiento }} {{ test.palo.codigo }} {{test.date}})
                 </a>
                 <i ng-show="test._id == getIdActivo()" class="icon-eye-open icon-black"></i>
             </li>
