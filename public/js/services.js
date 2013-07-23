@@ -59,19 +59,14 @@ serv.factory('storage', function() {
 
         /* Obtener fecha */
         var date = new Date();
-        var day=date.getDate();
-        var year=date.getFullYear();
-        var month=date.getMonth();
-        var realMonth=month+1;
 
         var test={
             _id: date.getTime(), // ID unívoco
             name : 'Nuevo test '+indiceNuevoTest,
             data : m,
-            date : day + '-' + realMonth + '-' + year,
             fecha : new Date(),
             estado : 'no terminado',
-            palo: {codigo:'M3', nombre:'Madera 3'},
+            palo: "M1",
             entrenamiento: 'L',
             statistics:{
                 total:0,
@@ -302,17 +297,17 @@ serv.factory('calculosBoard',function () {
                    less2: (stats.totales["less2"] | 0)+value["statistics"]["less2"],
                    more2: (stats.totales["more2"] | 0)+value["statistics"]["more2"]
                };
-               stats.parciales[value.palo["codigo"]]= stats.parciales[value.palo["codigo"]] || {};
-               stats.parciales[value.palo["codigo"]]={
+               stats.parciales[value.palo]= stats.parciales[value.palo] || {};
+               stats.parciales[value.palo]={
                    palo: value.palo["nombre"],
-                   total: (stats.parciales[value.palo["codigo"]]["total"] | 0)+value["statistics"]["total"],
-                   goals: (stats.parciales[value.palo["codigo"]]["goals"] | 0)+value["statistics"]["goals"],
-                   rightBalls: (stats.parciales[value.palo["codigo"]]["rightBalls"] | 0)+value["statistics"]["rightBalls"],
-                   leftBalls: (stats.parciales[value.palo["codigo"]]["leftBalls"] | 0)+value["statistics"]["leftBalls"],
-                   longBalls: (stats.parciales[value.palo["codigo"]]["longBalls"] | 0)+value["statistics"]["longBalls"],
-                   shortBalls: (stats.parciales[value.palo["codigo"]]["shortBalls"] | 0)+value["statistics"]["shortBalls"],
-                   less2: (stats.parciales[value.palo["codigo"]]["less2"] | 0)+value["statistics"]["less2"],
-                   more2: (stats.parciales[value.palo["codigo"]]["more2"] | 0)+value["statistics"]["more2"]
+                   total: (stats.parciales[value.palo]["total"] | 0)+value["statistics"]["total"],
+                   goals: (stats.parciales[value.palo]["goals"] | 0)+value["statistics"]["goals"],
+                   rightBalls: (stats.parciales[value.palo]["rightBalls"] | 0)+value["statistics"]["rightBalls"],
+                   leftBalls: (stats.parciales[value.palo]["leftBalls"] | 0)+value["statistics"]["leftBalls"],
+                   longBalls: (stats.parciales[value.palo]["longBalls"] | 0)+value["statistics"]["longBalls"],
+                   shortBalls: (stats.parciales[value.palo]["shortBalls"] | 0)+value["statistics"]["shortBalls"],
+                   less2: (stats.parciales[value.palo]["less2"] | 0)+value["statistics"]["less2"],
+                   more2: (stats.parciales[value.palo]["more2"] | 0)+value["statistics"]["more2"]
                };
            });
 

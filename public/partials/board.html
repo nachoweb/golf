@@ -10,8 +10,8 @@
 
         <div ng-hide="isError">
             <div ng-class="{zona: true, ocultar: pantallaCompleta}">
-                <h3 id="nombreTest">{{ data[numTest].name }} ({{ data[numTest].palo.nombre }} {{ data[numTest].entrenamiento }} {{
-                    data[numTest].date }})</h3>
+                <h3 id="nombreTest">{{ data[numTest].name }} ({{ palos[data[numTest].palo] }} {{ tipoJuego[data[numTest].entrenamiento] }} {{
+                    dateFormat(data[numTest].fecha,false) }})</h3>
                 <table class="tablaEstadisticas">
                     <tr>
                         <th class="golpesTotales"> Golpes totales</th>
@@ -41,18 +41,11 @@
                 <div style="text-align: center;">
                     <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
                            class="input-medium campo" placeholder="Nombre"/>
-                    <input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"
-                           class="campo" placeholder="Fecha"/>
-                    <select class="campo" ng-model="data[numTest].palo" ng-options ="p.nombre for p in palos" ng-disabled="!noTerminado(data[numTest]._id)">
-                        <!--<option value='0' selected="selected"> Palo ...</option>-->
-                        <option value=""> Elige palo ... </option>
+                    <!--<input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"-->
+                           <!--class="campo" placeholder="Fecha"/>-->
+                    <select class="campo" ng-model="data[numTest].palo" ng-options ="k as val for (k,val) in palos" ng-disabled="!noTerminado(data[numTest]._id)">
                     </select>
-                    <select class="campo" ng-model="data[numTest].entrenamiento"
-                            ng-disabled="!noTerminado(data[numTest]._id)">
-                        <!--<option value='0' selected="selected"> Tipo de entrenamiento ...</option>-->
-                        <option value='L' selected="selected"> Largo</option>
-                        <option value='M'> Medio</option>
-                        <option value='C'> Corto</option>
+                    <select class="campo" ng-model="data[numTest].entrenamiento" ng-options ="k as val for (k,val) in tipoJuego" ng-disabled="!noTerminado(data[numTest]._id)">
                     </select>
                 </div>
             </div>

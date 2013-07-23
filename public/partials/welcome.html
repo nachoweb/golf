@@ -38,7 +38,7 @@
                     <th> > 2 unid.</th>
                 </tr>
                 <tr ng-repeat="(key,parcial) in statistics.parciales">
-                    <td class="tipoPalo"> {{parcial.palo}}</td>
+                    <td class="tipoPalo"> {{palos[key]}}</td>
                     <td class="golpesTotales"> {{parcial.total}}</td>
                     <td> {{parcial.goals}}</td>
                     <td> {{ parcial.leftBalls }}   ({{parcial.leftBallsPercent}}%)</td>

@@ -16,12 +16,33 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         $scope.data=[];
         $scope.dataServer=[];
         $scope.pantallaCompleta = false;
-        $scope.palos = [
-            {codigo: 'H1', nombre:'Hierro 1'},
-            {codigo: 'H2', nombre:'Hierro 2'},
-            {codigo: 'H3', nombre:'Hierro 3'},
-            {codigo: 'M1', nombre:'Madera 1'}
-        ];
+
+        $scope.palos = {
+            'H1': 'Hierro 1',
+            'H2': 'Hierro 2',
+            'H3': 'Hierro 3',
+            "M1": "Madera 1"
+        }
+
+        $scope.tipoJuego={
+           "C":"Corto",
+           "M": "Medio",
+           "L": "Largo"
+        };
+
+        $scope.dateFormat=function (fecha,isDateTime) {
+            var date=new Date(fecha);
+            var d = date.getDate();
+            var m = date.getMonth() + 1;
+            var y = date.getFullYear();
+
+            var time=date.getHours()+":"+date.getMinutes();
+            var res=d+"-"+m+"-"+y;
+            if(isDateTime){
+                res=res+" "+time;
+            }
+            return res;
+        }
 
         storage.query(function (data) {
             $scope.data=data; //$scope.data será una referencia a storage.data
@@ -89,6 +110,8 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
 
     $scope.numTest = calculosBoard.findTestById($scope.data, $routeParams.testId);
 
+
+
     var numTest = $scope.numTest;
     if (numTest == -1) {
         $scope.setIsError(true);
@@ -107,7 +130,7 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
 
             calculosBoard.updateScore($scope.data[numTest], fil, col);
 
-
+            //???? Para que esto?
             $scope.statistics = {
                 total:0,
                 goals: 0,
