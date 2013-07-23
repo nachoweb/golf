@@ -2,6 +2,10 @@
 
 h1{ text-align: center; }
 
+a:hover {
+    color: #005580;
+    text-decoration: none;}
+
 /*** FIN estilos globales ***/
 
 /*** id estilos ***/
@@ -62,7 +66,14 @@ h1{ text-align: center; }
 #board td{
     width: 30px;
     height: 40px;
-    text-align: center;}
+    text-align: center;
+    selection: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: moz-none;
+    -ms-user-select: none;
+    user-select: none;}
 #board td.center{
     border: 2px dashed rgba(0, 0, 0, 0.28);}
 

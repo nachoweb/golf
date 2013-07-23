@@ -1,14 +1,10 @@
 'use strict';
 var ctrlMod = angular.module('ctrlMod', []);
+
 /* Utilities */
 function imp(something){
 	document.write('<p>' + something + '</p>');
 }
-
-
-
-
-
 /**
  * Módulo que contiene a los controladores
  * @type {module}
@@ -198,11 +194,6 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
 }
 ]);
 
-ctrlMod.controller('EstadisticasGlobalControl',['$scope','estadisticasGlobales',function (scope,estadisticasGlobales) {
-      var estadisticas={};
-
-      //Se calculan todas las estadisticas globales
-      estadisticas=estadisticasGlobales.calculaEstadisticasGlobales(scope.data);
-
-      scope.estadisticas=estadisticas;
+ctrlMod.controller('EstadisticasGlobalesControl',['$scope','calculosBoard',function (scope,calculosBoard) {
+    scope.statistics = calculosBoard.computeGlobalStatistics(scope.data);
 }]);

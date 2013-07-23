@@ -92,7 +92,9 @@
                     <div class="tablero" ng-class="{opaco:!noTerminado(data[numTest]._id)}">
                         <table id="board">
                             <tr ng-repeat="(fila, row) in data[numTest].data">
-                                <td ng-repeat="(columna,elem) in row" ng-click="boardClick(fila,columna)"
+                                <td ng-repeat="(columna,elem) in row"
+                                    ng-click="boardClick(fila,columna)"
+
                                     ng-class="{center:isCenter(data[numTest].data,fila,columna),
                                                zero:isZero(fila,columna),
                                                 borderLeftTop: checkBorder(data[numTest].data,fila,columna)==1,

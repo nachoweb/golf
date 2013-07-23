@@ -8,7 +8,7 @@ var app=angular.module('golfModule', ['servMod','ctrlMod']);
 
 app.config(['$routeProvider', function($routeProvider){
   $routeProvider.
-      when('/test', {templateUrl: 'partials/welcome.html',controller: 'EstadisticasGlobalControl'}).
+      when('/test', {templateUrl: 'partials/welcome.html',controller: 'EstadisticasGlobalesControl'}).
 	  when('/test/:testId', {templateUrl: 'partials/board.html' , controller: 'BoardControl'}).
       otherwise({redirectTo: '/test'});
 }]);
