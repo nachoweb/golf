@@ -3,9 +3,8 @@
     <!-- Global Statistics Container -->
     <div class="span9">
         <div class="zona">
-            <table id="tablaEstadisticas">
+            <table class="tablaEstadisticas">
                 <tr>
-                    <th class="golpesTotales"> Tipo </th>
                     <th class="golpesTotales"> Golpes totales</th>
                     <th><img src="./img/flag21x21.png"></th>
                     <th> Por la izquierda</th>
@@ -18,22 +17,36 @@
                 <tr>
                     <td class="golpesTotales"> {{statistics.totales.total}}</td>
                     <td class="golpesTotales"> {{statistics.totales.goals}}</td>
-                    <td class="golpesTotales"> {{ statistics.totales.leftBalls }}  <br> ({{statistics.totales.leftBallsPercent}}%)</td>
-                    <td class="golpesTotales"> {{ statistics.totales.rightBalls }}<br>({{statistics.totales.rightBallsPercent}}%)</td>
-                    <td class="golpesTotales"> {{ statistics.totales.shortBalls }} <br>({{statistics.totales.shortBallsPercent}}%)</td>
-                    <td class="golpesTotales">  {{ statistics.totales.longBalls }}<br> ({{statistics.totales.longBallsPercent}}%)</td>
-                    <td class="golpesTotales">  {{ statistics.totales.less2 }}<br>({{statistics.totales.less2Percent}}%)</td>
-                    <td class="golpesTotales">  {{ statistics.totales.more2 }}<br>({{statistics.totales.more2Percent}}%)</td>
+                    <td class="golpesTotales"> {{ statistics.totales.leftBalls }}   ({{statistics.totales.leftBallsPercent}}%)</td>
+                    <td class="golpesTotales"> {{ statistics.totales.rightBalls }} ({{statistics.totales.rightBallsPercent}}%)</td>
+                    <td class="golpesTotales"> {{ statistics.totales.shortBalls }} ({{statistics.totales.shortBallsPercent}}%)</td>
+                    <td class="golpesTotales">  {{ statistics.totales.longBalls }} ({{statistics.totales.longBallsPercent}}%)</td>
+                    <td class="golpesTotales">  {{ statistics.totales.less2 }} ({{statistics.totales.less2Percent}}%)</td>
+                    <td class="golpesTotales">  {{ statistics.totales.more2 }} ({{statistics.totales.more2Percent}}%)</td>
                 </tr>
-                <tr ng-repeat="parcial in statistics.parciales">
-                    <td class="golpesTotales"> {{statistics.totales.total}}</td>
+            </table>
+            <table class="tablaEstadisticas parciales">
+                <tr>
+                    <th></th>
+                    <th class="golpesTotales"> Golpes totales</th>
+                    <th><img src="./img/flag21x21.png"></th>
+                    <th> Por la izquierda</th>
+                    <th> Por la derecha</th>
+                    <th> Cortas</th>
+                    <th> Largas</th>
+                    <th> &le; 2 unid.</th>
+                    <th> > 2 unid.</th>
+                </tr>
+                <tr ng-repeat="(key,parcial) in statistics.parciales">
+                    <td class="tipoPalo"> {{key}}</td>
+                    <td class="golpesTotales"> {{parcial.total}}</td>
                     <td> {{parcial.goals}}</td>
-                    <td> {{ parcial.leftBalls }}  <br> ({{parcial.leftBallsPercent}}%)</td>
-                    <td> {{ parcial.rightBalls }}<br>({{parcial.rightBallsPercent}}%)</td>
-                    <td> {{ parcial.shortBalls }} <br>({{parcial.shortBallsPercent}}%)</td>
-                    <td>  {{ parcial.longBalls }}<br> ({{parcial.longBallsPercent}}%)</td>
-                    <td>  {{ parcial.less2 }}<br>({{parcial.less2Percent}}%)</td>
-                    <td>  {{ parcial.more2 }}<br>({{parcial.more2Percent}}%)</td>
+                    <td> {{ parcial.leftBalls }}   ({{parcial.leftBallsPercent}}%)</td>
+                    <td> {{ parcial.rightBalls }} ({{parcial.rightBallsPercent}}%)</td>
+                    <td> {{ parcial.shortBalls }} ({{parcial.shortBallsPercent}}%)</td>
+                    <td>  {{ parcial.longBalls }} ({{parcial.longBallsPercent}}%)</td>
+                    <td>  {{ parcial.less2 }} ({{parcial.less2Percent}}%)</td>
+                    <td>  {{ parcial.more2 }} ({{parcial.more2Percent}}%)</td>
                 </tr>
             </table>
         </div>
