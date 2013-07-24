@@ -285,7 +285,25 @@ serv.factory('calculosBoard',function () {
        },
        computeGlobalStatistics: function(tests){
 
-           var stats={totales:{},parciales:{}}
+           var stats={
+               totales:{
+                   total:0,
+                   goals:0,
+                   rightBalls:0,
+                   leftBalls:0,
+                   longBalls:0,
+                   shortBalls:0,
+                   less2:0,
+                   more2:0,
+                   rightBallsPercent:0,
+                   leftBallsPercent:0,
+                   longBallsPercent:0,
+                   shortBallsPercent:0,
+                   more2Percent:0,
+                   less2Percent:0
+               },
+               hayParciales:0,
+               parciales:{}}
            angular.forEach(tests, function (value, key) {
                stats.totales={
                    total: (stats.totales["total"] | 0)+value["statistics"]["total"],
@@ -327,7 +345,9 @@ serv.factory('calculosBoard',function () {
                stats.parciales[key]["less2Percent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["less2"]*100/stats.parciales[key]["total"]).toFixed();;
            });
 
-
+           if (!angular.equals(stats.parciales,{})){
+               stats.hayParciales = 1;
+           }
            return stats;
        },
        resetIdActivo: function(){

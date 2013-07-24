@@ -119,6 +119,9 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
         calculosBoard.idActivo = $routeParams.testId;
     }
 
+    $scope.saluda = function(){
+        console.log("hola");
+    }
     $scope.statistics = calculosBoard.getUpdatedStatistics($scope.data[numTest]);
 
 
