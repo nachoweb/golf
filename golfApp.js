@@ -88,6 +88,7 @@ app.get('/cache.manifest', function(req, res){
     'css/app.css\n' +
     'css/bootstrap.css\n'+
     'img/flag21x21.png\n'+
+    'img/favicon.ico\n'+
     'img/home.png\n'+
     'img/golfista.PNG\n'+
     'img/grassTexture.jpg\n'+
