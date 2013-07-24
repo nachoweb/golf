@@ -84,7 +84,7 @@ app.get('/cache.manifest', function(req, res){
 //    res.end("CACHE MANIFEST");
 
     var manifest = 'CACHE MANIFEST\n'+
-        '# rev 3\n' +
+        '# rev 4\n' +
     'css/app.css\n' +
     'css/bootstrap.css\n'+
     'img/flag21x21.png\n'+
