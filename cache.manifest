@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# rev 2
+# rev 6
 
 css/app.css
 css/bootstrap.css
@@ -19,6 +19,3 @@ lib/angular/angular.min.js
 partials/board.html
 partials/tests.html
 partials/welcome.html
-
-NETWORK:
-*
