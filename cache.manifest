@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# rev 6
+# rev 7
 
 css/app.css
 css/bootstrap.css
@@ -8,7 +8,7 @@ css/bootstrap-responsive.min.css
 img/flag21x21.png
 img/favicon.ico
 img/home.png
-img/golfista.png
+img/golfista.PNG
 img/grassTexture.jpg
 img/glyphicons-halflings.png
 img/glyphicons-halflings-white.png
