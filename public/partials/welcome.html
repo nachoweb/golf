@@ -5,48 +5,52 @@
         <div class="zona">
             <table class="tablaEstadisticas">
                 <tr>
-                    <th class="golpesTotales"> Golpes totales</th>
-                    <th><img src="./img/flag21x21.png"></th>
-                    <th> Por la izquierda</th>
-                    <th> Por la derecha</th>
+                    <th class="golpesTotales"> Golpes totales dentro</th>
+                    <th></th>
+                    <th> Media error</th>
+                    <th> Izquierda</th>
+                    <th> Derecha</th>
                     <th> Cortas</th>
                     <th> Largas</th>
-                    <th> &le; 2 unid.</th>
-                    <th> > 2 unid.</th>
+                    <th><img src="./img/flag21x21.png"></th>
+                    <th>Fuera de green</th>
                 </tr>
                 <tr>
                     <td class="golpesTotales"> {{statistics.totales.total}}</td>
+                    <td class="golpesTotales"></td>
+                    <td class="golpesTotales"> {{ statistics.totales.avgError.toFixed(1)}}m</td>
+                    <td class="golpesTotales"> {{ statistics.totales.avgMtLeftBalls.toFixed(1)}}m <br>{{ statistics.totales.leftBalls }} ({{statistics.totales.leftBallsPercent}}%)</td>
+                    <td class="golpesTotales"> {{ statistics.totales.avgMtRightBalls.toFixed(1)}}m <br>{{ statistics.totales.rightBalls }} ({{statistics.totales.rightBallsPercent}}%)</td>
+                    <td class="golpesTotales"> {{ statistics.totales.avgMtShortBalls.toFixed(1)}}m <br>{{ statistics.totales.shortBalls }} ({{statistics.totales.shortBallsPercent}}%)</td>
+                    <td class="golpesTotales"> {{ statistics.totales.avgMtLongBalls.toFixed(1)}}m <br>{{ statistics.totales.longBalls }} ({{statistics.totales.longBallsPercent}}%)</td>
                     <td class="golpesTotales"> {{statistics.totales.goals}}</td>
-                    <td class="golpesTotales"> {{ statistics.totales.leftBalls }}   ({{statistics.totales.leftBallsPercent}}%)</td>
-                    <td class="golpesTotales"> {{ statistics.totales.rightBalls }} ({{statistics.totales.rightBallsPercent}}%)</td>
-                    <td class="golpesTotales"> {{ statistics.totales.shortBalls }} ({{statistics.totales.shortBallsPercent}}%)</td>
-                    <td class="golpesTotales">  {{ statistics.totales.longBalls }} ({{statistics.totales.longBallsPercent}}%)</td>
-                    <td class="golpesTotales">  {{ statistics.totales.less2 }} ({{statistics.totales.less2Percent}}%)</td>
-                    <td class="golpesTotales">  {{ statistics.totales.more2 }} ({{statistics.totales.more2Percent}}%)</td>
+                    <td class="golpesTotales">  {{ statistics.totales.fuera }} ({{statistics.totales.fueraPercent}}%)</td>
                 </tr>
             </table>
             <table class="tablaEstadisticas parciales">
                 <tr ng-hide="!statistics.hayParciales">
                     <th></th>
-                    <th class="golpesTotales"> Golpes totales</th>
-                    <th><img src="./img/flag21x21.png"></th>
-                    <th> Por la izquierda</th>
-                    <th> Por la derecha</th>
+                    <th class="golpesTotales"> Golpes totales dentro</th>
+                    <th> Media distancia</th>
+                    <th> Media error</th>
+                    <th> Izquierda</th>
+                    <th> Derecha</th>
                     <th> Cortas</th>
                     <th> Largas</th>
-                    <th> &le; 2 unid.</th>
-                    <th> > 2 unid.</th>
+                    <th><img src="./img/flag21x21.png"></th>
+                    <th>Fuera de green</th>
                 </tr>
                 <tr ng-repeat="(key,parcial) in statistics.parciales">
                     <td class="tipoPalo"> {{palos[key]}}</td>
                     <td class="golpesTotales"> {{parcial.total}}</td>
+                    <td> {{ parcial.avgDistancia.toFixed(1) }} m</td>
+                    <td> {{ parcial.avgError.toFixed(1)}}m</td>
+                    <td> {{ parcial.avgMtLeftBalls.toFixed(1)}}m <br>{{ parcial.leftBalls }} ({{parcial.leftBallsPercent}}%)</td>
+                    <td> {{ parcial.avgMtRightBalls.toFixed(1)}}m <br>{{ parcial.rightBalls }} ({{parcial.rightBallsPercent}}%)</td>
+                    <td> {{ parcial.avgMtShortBalls.toFixed(1)}}m <br>{{ parcial.shortBalls }} ({{parcial.shortBallsPercent}}%)</td>
+                    <td> {{ parcial.avgMtLongBalls.toFixed(1)}}m <br>{{ parcial.longBalls }} ({{parcial.longBallsPercent}}%)</td>
                     <td> {{parcial.goals}}</td>
-                    <td> {{ parcial.leftBalls }}   ({{parcial.leftBallsPercent}}%)</td>
-                    <td> {{ parcial.rightBalls }} ({{parcial.rightBallsPercent}}%)</td>
-                    <td> {{ parcial.shortBalls }} ({{parcial.shortBallsPercent}}%)</td>
-                    <td>  {{ parcial.longBalls }} ({{parcial.longBallsPercent}}%)</td>
-                    <td>  {{ parcial.less2 }} ({{parcial.less2Percent}}%)</td>
-                    <td>  {{ parcial.more2 }} ({{parcial.more2Percent}}%)</td>
+                    <td>  {{ parcial.fuera }} ({{parcial.fueraPercent}}%)</td>
                 </tr>
             </table>
         </div>

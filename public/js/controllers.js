@@ -1,10 +1,6 @@
 'use strict';
 var ctrlMod = angular.module('ctrlMod', []);
 
-/* Utilities */
-function imp(something){
-	document.write('<p>' + something + '</p>');
-}
 /**
  * Módulo que contiene a los controladores
  * @type {module}
@@ -18,16 +14,27 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         $scope.pantallaCompleta = false;
 
         $scope.palos = {
-            'H1': 'Hierro 1',
+            'M1': 'Driver',
+            'M3': 'Madera 3',
+            'M5': 'Madera 5',
+            'Hyb 1': 'Hibrido 1',
+            'Hyb 2': 'Hibrido 2',
             'H2': 'Hierro 2',
             'H3': 'Hierro 3',
-            "M1": "Madera 1"
-        }
-
-        $scope.tipoJuego={
-           "C":"Corto",
-           "M": "Medio",
-           "L": "Largo"
+            'H4': 'Hierro 4',
+            'H5': 'Hierro 5',
+            'H6': 'Hierro 6',
+            'H7': 'Hierro 7',
+            'H8': 'Hierro 8',
+            'H9': 'Hierro 9',
+            'PW': 'PitchingWedge',
+            '50º': '50º',
+            '52º': '52º',
+            '54º': '54º',
+            '56º': '56º',
+            '58º': '58º',
+            '60º': '60º',
+            'Putt':'Putt'
         };
 
         $scope.dateFormat=function (fecha,isDateTime) {
@@ -47,7 +54,6 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         storage.query(function (data) {
             $scope.data=data; //$scope.data será una referencia a storage.data
             $scope.dataServer=angular.copy(data);
-            console.log('Tests cargados: ', $scope.data);
 
         });
 
@@ -117,50 +123,26 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
         $scope.setIsError(true);
     } else {
         calculosBoard.idActivo = $routeParams.testId;
+        $scope.statistics = calculosBoard.getUpdatedStatistics($scope.data[numTest]);
     }
 
-    $scope.saluda = function(){
-        console.log("hola");
-    }
-    $scope.statistics = calculosBoard.getUpdatedStatistics($scope.data[numTest]);
+    $scope.dblClick=function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
 
+    }
 
     /* Function to handle a cell click */
-    $scope.boardClick = function (fil, col) {
-
+    $scope.boardClick = function ($event,fil, col) {
+        $event.preventDefault();
+        $event.stopPropagation();
         if ($scope.data[numTest].estado === 'no terminado') {
             $scope.data[numTest].data[fil][col]++;
-
-            calculosBoard.updateScore($scope.data[numTest], fil, col);
-
-            //???? Para que esto?
-            $scope.statistics = {
-                total:0,
-                goals: 0,
-                rightBallsPercent: 0,
-                leftBallsPercent: 0,
-                longBallsPercent: 0,
-                shortBallsPercent: 0,
-                less2Percent: 0,
-                more2Percent: 0
-            }
-
             $scope.statistics = calculosBoard.getUpdatedStatistics($scope.data[numTest]);
         }
     }
 
-    /* Function to detect a cell containing zero */
-    $scope.isZero = function (r, c) {
-        if ($scope.data[numTest].data[r][c] == 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    $scope.aDistancia5 = calculosBoard.aDistancia5;
-    $scope.checkBorder = calculosBoard.checkBorder;
+    $scope.cellFunc=calculosBoard.cellFunc;
 
     $scope.volver = function () {
         $scope.setIsError(false);

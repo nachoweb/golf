@@ -43,11 +43,9 @@ a:hover {
     margin-bottom: 10px;}
 
 #listaTests{
-    margin: 2%;
+    margin: 10px;
     height: 200px;
     overflow: auto;
-    margin-top: 10%;
-    margin-bottom: 10%;
     text-align:left;}
 #listaTests > li{
     cursor:pointer;
@@ -74,8 +72,8 @@ a:hover {
     -moz-user-select: moz-none;
     -ms-user-select: none;
     user-select: none;}
-#board td.center{
-    border: 2px dashed rgba(0, 0, 0, 0.28);}
+#board td.center{ border: 2px solid rgba(0, 0, 0, 0.28);}
+#board td.outGreen{background-color: rgba(255, 112, 0, 0.15);}
 
 #cuadroEstadisticasGlobales{
     background: #dcdcdc;

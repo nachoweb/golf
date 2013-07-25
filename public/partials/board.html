@@ -10,28 +10,30 @@
 
         <div ng-hide="isError">
             <div ng-class="{zona: true, ocultar: pantallaCompleta}">
-                <h3 id="nombreTest">{{ data[numTest].name }} ({{ palos[data[numTest].palo] }} {{ tipoJuego[data[numTest].entrenamiento] }} {{
+                <h3 id="nombreTest">{{ data[numTest].name }} ({{ palos[data[numTest].palo] }} {{ data[numTest].metros }}<span ng-hide="data[numTest].metros==null">m</span> {{
                     dateFormat(data[numTest].fecha,false) }})</h3>
                 <table class="tablaEstadisticas">
                     <tr>
-                        <th class="golpesTotales"> Golpes totales</th>
-                        <th><img src="./img/flag21x21.png"></th>
-                        <th> Por la izquierda</th>
-                        <th> Por la derecha</th>
+                        <th class="golpesTotales"> Golpes totales dentro</th>
+                        <th> Media distancia</th>
+                        <th> Media error</th>
+                        <th> Izquierda</th>
+                        <th> Derecha</th>
                         <th> Cortas</th>
                         <th> Largas</th>
-                        <th> &le; 2 unid.</th>
-                        <th> > 2 unid.</th>
+                        <th><img src="./img/flag21x21.png"></th>
+                        <th>Fuera de green</th>
                     </tr>
                     <tr>
                         <td class="golpesTotales"> {{statistics.total}}</td>
+                        <td> {{ statistics.avgDistancia.toFixed(1) }} m</td>
+                        <td> {{ statistics.avgError.toFixed(1)}}m</td>
+                        <td> {{ statistics.avgMtLeftBalls.toFixed(1)}}m <br>{{ statistics.leftBalls }} ({{statistics.leftBallsPercent}}%)</td>
+                        <td> {{ statistics.avgMtRightBalls.toFixed(1)}}m <br>{{ statistics.rightBalls }} ({{statistics.rightBallsPercent}}%)</td>
+                        <td> {{ statistics.avgMtShortBalls.toFixed(1)}}m <br>{{ statistics.shortBalls }} ({{statistics.shortBallsPercent}}%)</td>
+                        <td> {{ statistics.avgMtLongBalls.toFixed(1)}}m <br>{{ statistics.longBalls }} ({{statistics.longBallsPercent}}%)</td>
                         <td> {{statistics.goals}}</td>
-                        <td> {{ data[numTest].statistics.leftBalls }} ({{statistics.leftBallsPercent}}%)</td>
-                        <td> {{ data[numTest].statistics.rightBalls }} ({{statistics.rightBallsPercent}}%)</td>
-                        <td> {{ data[numTest].statistics.shortBalls }} ({{statistics.shortBallsPercent}}%)</td>
-                        <td> {{ data[numTest].statistics.longBalls }} ({{statistics.longBallsPercent}}%)</td>
-                        <td>  {{ data[numTest].statistics.less2 }} ({{statistics.less2Percent}}%)</td>
-                        <td> {{ data[numTest].statistics.more2 }} ({{statistics.more2Percent}}%)</td>
+                        <td>  {{ statistics.fuera }} ({{statistics.fueraPercent}}%)</td>
                     </tr>
                 </table>
             </div>
@@ -44,9 +46,14 @@
                     <!--<input type="text" ng-model="data[numTest].date" ng-disabled="!noTerminado(data[numTest]._id)"-->
                            <!--class="campo" placeholder="Fecha"/>-->
                     <select class="campo" ng-model="data[numTest].palo" ng-options ="k as val for (k,val) in palos" ng-disabled="!noTerminado(data[numTest]._id)">
+                        <option value="">--Elige palo--</option>
                     </select>
-                    <select class="campo" ng-model="data[numTest].entrenamiento" ng-options ="k as val for (k,val) in tipoJuego" ng-disabled="!noTerminado(data[numTest]._id)">
-                    </select>
+                    <select class="campo" ng-model="data[numTest].metrosUnidad" ng-options ="val for val in [0.5,1,1.5,2,2.5,3,3.5,4,4.5,5]"
+                            ng-disabled="!noTerminado(data[numTest]._id)">
+                    </select> m/unid
+                    <input type="text" ng-model="data[numTest].metros" ng-disabled="!noTerminado(data[numTest]._id)"
+                           class="input-medium campo" placeholder="Metros a bandera"/>
+                    </select><img src="./img/flag21x21.png">
                 </div>
             </div>
 
@@ -81,22 +88,22 @@
                     </div>
 
                     <!-- Board Container -->
-                    <div class="tablero" ng-class="{opaco:!noTerminado(data[numTest]._id)}">
+                    <div class="tablero" ng-class="{opaco:!noTerminado(data[numTest]._id)}" ng-dblclick="dblClick($event)">
                         <table id="board">
                             <tr ng-repeat="(fila, row) in data[numTest].data">
                                 <td ng-repeat="(columna,elem) in row"
-                                    ng-click="boardClick(fila,columna)"
-
-                                    ng-class="{center:isCenter(data[numTest].data,fila,columna),
-                                               zero:isZero(fila,columna),
-                                                borderLeftTop: checkBorder(data[numTest].data,fila,columna)==1,
-                                                borderTop: checkBorder(data[numTest].data,fila,columna)==2,
-                                                borderTopRight: checkBorder(data[numTest].data,fila,columna)==3,
-                                                borderRight: checkBorder(data[numTest].data,fila,columna)==4,
-                                                borderRightBottom: checkBorder(data[numTest].data,fila,columna)==5,
-                                                borderBottom: checkBorder(data[numTest].data,fila,columna)==6,
-                                                borderBottomLeft: checkBorder(data[numTest].data,fila,columna)==7,
-                                                borderLeft: checkBorder(data[numTest].data,fila,columna)==8}">
+                                    ng-click="boardClick($event,fila,columna)"
+                                    ng-class="{center:cellFunc.isCenter(data[numTest].data,fila,columna),
+                                               zero:cellFunc.isZero(data[numTest].data,fila,columna),
+                                               outGreen:cellFunc.isOut(data[numTest].data,fila,columna),
+                                                borderLeftTop: cellFunc.checkBorder(data[numTest].data,fila,columna)==1,
+                                                borderTop: cellFunc.checkBorder(data[numTest].data,fila,columna)==2,
+                                                borderTopRight: cellFunc.checkBorder(data[numTest].data,fila,columna)==3,
+                                                borderRight: cellFunc.checkBorder(data[numTest].data,fila,columna)==4,
+                                                borderRightBottom: cellFunc.checkBorder(data[numTest].data,fila,columna)==5,
+                                                borderBottom: cellFunc.checkBorder(data[numTest].data,fila,columna)==6,
+                                                borderBottomLeft: cellFunc.checkBorder(data[numTest].data,fila,columna)==7,
+                                                borderLeft: cellFunc.checkBorder(data[numTest].data,fila,columna)==8}">
                                     {{elem}}
                                 </td>
                             </tr>

@@ -54,7 +54,7 @@ serv.factory('storage', function() {
     storage.createTest = function(cb){
         indiceNuevoTest++;
         /* Crear un tablero relleno con ceros */
-        var dim = 9;
+        var dim = 11;
         var m = creaMatriz(dim,dim,0);
 
         /* Obtener fecha */
@@ -66,18 +66,10 @@ serv.factory('storage', function() {
             data : m,
             fecha : new Date(),
             estado : 'no terminado',
-            palo: "M1",
-            entrenamiento: 'L',
-            statistics:{
-                total:0,
-                goals : 0,
-                rightBalls: 0,
-                leftBalls:0,
-                longBalls:0,
-                shortBalls:0,
-                less2:0,
-                more2:0
-            }
+            palo: null,
+            metros:null,
+            metrosUnidad:0.5,
+            statistics:null
         };
 
         storage.data.unshift(test);
@@ -133,227 +125,253 @@ serv.factory('storage', function() {
 
 
 serv.factory('calculosBoard',function () {
-   var servicio={
-       idActivo:0,
-       isCenter:function (data,fil,col) {
-           var centro=Math.floor(data.length/2);
-           return fil==centro && col==centro;
-       },
-       findTestById: function (datos,id) {
-           var index = -1;
-           angular.forEach(datos ,function(v,k){
-               if(id ==v._id){
-                   index = k;
-               }
-           });
-           return index;
-       },
-       isMor5:function (data,fila,columna) {
-           var centro = Math.floor(data.length/2);
-           var diff_x = Math.abs(fila-centro);
-           var diff_y = Math.abs(columna-centro);
 
-           if((diff_x>5) || (diff_y>5)){
-               return true;
-           }
-           else{
-               return false;
-           }
-       },
-       isBetw15:function (data,fila,columna) {
-           var centro = Math.floor(data.length/2);
-           var diff_x = Math.abs(fila-centro);
-           var diff_y = Math.abs(columna-centro);
+    var servicio={
 
-           var max = Math.max(diff_x,diff_y);
-           if(max>=1 && max<=5){
-               return true;
-           }
-           else{
-               return false;
-           }
-       },
-       aDistancia5:function (data,fila,columna) {
-           var centro=Math.floor(data.length/ 2),
-               dif_filas = Math.abs(fila - centro),
-               dif_columnas = Math.abs(columna - centro);
+        idActivo:0,
+        findTestById: function (datos,id) {
+            var index = -1;
+            angular.forEach(datos ,function(v,k){
+                if(id ==v._id){
+                    index = k;
+                }
+            });
+            return index;
+        },
+        resetIdActivo: function(){
+            servicio.idActivo = 0;
+        }
+    };
 
-           if((dif_filas == 5 && dif_columnas <= 5) || (dif_filas <= 5 && dif_columnas == 5) ||
-               (dif_filas == 9 && dif_columnas <= 9) || (dif_filas <= 9 && dif_columnas == 9)){
-               return true;
-           }
-
-           else{
-               return false;
-           }
-       },
-       // Update test Scores
-       updateScore: function(test, fila, columna){
-           var centro=Math.floor(test.data.length/ 2),
-               difFilas = fila - centro,
-               difColumnas = columna - centro;
-
-           test.statistics.total++;
-
-           // If goal
-           if (difFilas==0 && difColumnas==0){
-               test.statistics.goals++;
-           }
-           // If ball at the right part
-           else if (difColumnas > 0){
-               test.statistics.rightBalls++;
-           // If ball at the left part
-           }else if(difColumnas < 0){
-               test.statistics.leftBalls++;
-           }
-
-           // Short ball
-           if (difFilas > 0){
-              test.statistics.shortBalls++;
-           // Long ball
-           }else if(difFilas < 0){
-               test.statistics.longBalls++;
-           }
-
-           // Is more 2 units
-           var absDifFilas = Math.abs(difFilas);
-           var absDifColumnas = Math.abs(difColumnas);
-           if (absDifFilas > 2 || absDifColumnas>2){
-               test.statistics.more2++;
-           }else if(absDifFilas <= 2 && absDifColumnas <=2){
-               test.statistics.less2++;
-           }
-       },
-       getUpdatedStatistics: function(test){
-           var localStats = {
-               total:0,
-               goals:0,
-               rightBallsPercent: 0,
-               leftBallsPercent: 0,
-               longBallsPercent: 0,
-               shortBallsPercent: 0,
-               less2Percent: 0,
-               more2Percent: 0}
-
-           // Calculate the total balls
-           var total = 0;
-           for(var i=0; i<test.data.length; i++){
-               for( var j=0; j<test.data.length; j++){
-                    total = total + test.data[i][j];
-               }
-           }
-
-           if(total > 0){
-               // Calculate the statistics
-               localStats.total = total;
-               localStats.goals = test.statistics.goals;
-               localStats.rightBallsPercent = ((test.statistics.rightBalls/total)*100).toFixed();
-               localStats.leftBallsPercent = ((test.statistics.leftBalls/total)*100).toFixed();
-               localStats.longBallsPercent = ((test.statistics.longBalls/total)*100).toFixed();
-               localStats.shortBallsPercent = ((test.statistics.shortBalls/total)*100).toFixed();
-               localStats.less2Percent = ((test.statistics.less2/total)*100).toFixed();
-               localStats.more2Percent = ((test.statistics.more2/total)*100).toFixed();
-           }
-
-           return localStats;
-       },
-       checkBorder: function(data, fila, columna){
-           var valor = 0;
-           var centro=Math.floor(data.length/ 2),
-               difFilas = fila - centro,
-               difColumnas = columna - centro;
-
-           if (difFilas==-2 && difColumnas==-2) {
-               valor = 1;
-           }else if (difFilas==-2 && difColumnas>-2 && difColumnas<2){
-               valor = 2;
-           }else if (difFilas==-2 && difColumnas==2) {
-               valor = 3;
-           }else if (difColumnas==2 && difFilas>-2 && difFilas<2){
-               valor = 4;
-           }else if (difFilas==2 && difColumnas==2) {
-               valor = 5;
-           }else if (difFilas==2 && difColumnas>-2 && difColumnas<2){
-               valor = 6;
-           }else if (difFilas==2 && difColumnas==-2) {
-               valor = 7;
-           }else if (difColumnas==-2 && difFilas>-2 && difFilas<2){
-               valor = 8;
-           }
-
-           return valor;
-       },
-       computeGlobalStatistics: function(tests){
-
-           var stats={
-               totales:{
-                   total:0,
-                   goals:0,
-                   rightBalls:0,
-                   leftBalls:0,
-                   longBalls:0,
-                   shortBalls:0,
-                   less2:0,
-                   more2:0,
-                   rightBallsPercent:0,
-                   leftBallsPercent:0,
-                   longBallsPercent:0,
-                   shortBallsPercent:0,
-                   more2Percent:0,
-                   less2Percent:0
-               },
-               hayParciales:0,
-               parciales:{}}
-           angular.forEach(tests, function (value, key) {
-               stats.totales={
-                   total: (stats.totales["total"] | 0)+value["statistics"]["total"],
-                   goals: (stats.totales["goals"] | 0)+value["statistics"]["goals"],
-                   rightBalls: (stats.totales["rightBalls"] | 0) + value["statistics"]["rightBalls"],
-                   leftBalls: (stats.totales["leftBalls"] | 0)+value["statistics"]["leftBalls"],
-                   longBalls: (stats.totales["longBalls"] | 0)+value["statistics"]["longBalls"],
-                   shortBalls: (stats.totales["shortBalls"] | 0)+value["statistics"]["shortBalls"],
-                   less2: (stats.totales["less2"] | 0)+value["statistics"]["less2"],
-                   more2: (stats.totales["more2"] | 0)+value["statistics"]["more2"]
-               };
-               stats.parciales[value.palo]= stats.parciales[value.palo] || {};
-               stats.parciales[value.palo]={
-                   palo: value.palo["nombre"],
-                   total: (stats.parciales[value.palo]["total"] | 0)+value["statistics"]["total"],
-                   goals: (stats.parciales[value.palo]["goals"] | 0)+value["statistics"]["goals"],
-                   rightBalls: (stats.parciales[value.palo]["rightBalls"] | 0)+value["statistics"]["rightBalls"],
-                   leftBalls: (stats.parciales[value.palo]["leftBalls"] | 0)+value["statistics"]["leftBalls"],
-                   longBalls: (stats.parciales[value.palo]["longBalls"] | 0)+value["statistics"]["longBalls"],
-                   shortBalls: (stats.parciales[value.palo]["shortBalls"] | 0)+value["statistics"]["shortBalls"],
-                   less2: (stats.parciales[value.palo]["less2"] | 0)+value["statistics"]["less2"],
-                   more2: (stats.parciales[value.palo]["more2"] | 0)+value["statistics"]["more2"]
-               };
-           });
-
-           stats.totales["rightBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["rightBalls"]*100/stats.totales["total"]).toFixed();
-           stats.totales["leftBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["leftBalls"]*100/stats.totales["total"]).toFixed();
-           stats.totales["longBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["longBalls"]*100/stats.totales["total"]).toFixed();
-           stats.totales["shortBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["shortBalls"]*100/stats.totales["total"]).toFixed();
-           stats.totales["more2Percent"]=(stats.totales["total"]==0 ? 0 : stats.totales["more2"]*100/stats.totales["total"]).toFixed();
-           stats.totales["less2Percent"]=(stats.totales["total"]==0 ? 0 : stats.totales["less2"]*100/stats.totales["total"]).toFixed();
-
-           angular.forEach(stats.parciales, function (value, key) {
-               stats.parciales[key]["rightBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["rightBalls"]*100/stats.parciales[key]["total"]).toFixed();;
-               stats.parciales[key]["leftBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["leftBalls"]*100/stats.parciales[key]["total"]).toFixed();;
-               stats.parciales[key]["longBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["longBalls"]*100/stats.parciales[key]["total"]).toFixed();;
-               stats.parciales[key]["shortBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["shortBalls"]*100/stats.parciales[key]["total"]).toFixed();;
-               stats.parciales[key]["more2Percent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["more2"]*100/stats.parciales[key]["total"]).toFixed();;
-               stats.parciales[key]["less2Percent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["less2"]*100/stats.parciales[key]["total"]).toFixed();;
-           });
-
-           if (!angular.equals(stats.parciales,{})){
-               stats.hayParciales = 1;
-           }
-           return stats;
-       },
-       resetIdActivo: function(){
-           servicio.idActivo = 0;
+   function calculaEstadisticasTest(cuadroDatos,metrosUnidad) {
+       var len=cuadroDatos.length,centro=Math.floor(len/ 2),mt=metrosUnidad;
+       var stats={
+           total:0,
+           leftBalls:0,rightBalls:0,mtLeftBalls:0,mtRightBalls:0,
+           shortBalls:0,longBalls:0,mtShortBalls:0,mtLongBalls:0,
+           mtError:0,
+           goals:0,
+           fuera:0
        }
-   };
+       for(var fil=0;fil < len;fil++){
+           for(var col=0;col < len; col++){
+              var valor=cuadroDatos[fil][col],
+                  difFilas = fil - centro,
+                  difColumnas = col - centro,mtVert= 0,mtHoriz=0;
+
+
+              // Si fuera
+              if(Math.abs(difFilas)==centro || Math.abs(difColumnas)==centro ){
+                   stats.fuera+=valor;
+              }else{
+                   stats.total+=valor;
+
+                    //Si goal
+                   if (difFilas==0 && difColumnas==0){
+                        stats.goals+=valor;
+                   }else{
+                       mtHoriz = valor * metrosUnidad * Math.abs(difColumnas);
+                       mtVert = valor * metrosUnidad * Math.abs(difFilas);
+                       stats.mtError+=Math.sqrt(mtHoriz*mtHoriz + mtVert*mtVert);
+                       if(difColumnas!=0){
+                           if(difColumnas > 0){
+                               stats.rightBalls+=valor;stats.mtRightBalls+=valor*metrosUnidad*Math.abs(difColumnas);
+                           }else{
+                               stats.leftBalls+=valor ;stats.mtLeftBalls+=valor*metrosUnidad*Math.abs(difColumnas);
+                           }
+                       }
+                       if(difFilas!=0){
+                           if(difFilas > 0){
+                               stats.shortBalls+=valor;stats.mtShortBalls+=valor*metrosUnidad*Math.abs(difFilas);
+                           }else{
+                               stats.longBalls+=valor ;stats.mtLongBalls+=valor*metrosUnidad*Math.abs(difFilas);
+                           }
+                       }
+                   }
+              }
+
+           } //end for columnas
+       } //end for filas
+
+
+       return stats;
+
+
+   }
+
+
+
+   servicio.getUpdatedStatistics= function(test){
+       test.statistics=calculaEstadisticasTest(test.data,test.metrosUnidad);
+       var localStats = { };
+
+        // Calcula porcentaje
+        var total=test.statistics.total
+        angular.extend(localStats,test.statistics);
+        localStats.rightBallsPercent =total==0 ? 0 : ((localStats.rightBalls/total)*100).toFixed();
+        localStats.leftBallsPercent =total==0 ? 0 : ((localStats.leftBalls/total)*100).toFixed();
+        localStats.longBallsPercent =total==0 ? 0 : ((localStats.longBalls/total)*100).toFixed();
+        localStats.shortBallsPercent =total==0 ? 0 : ((localStats.shortBalls/total)*100).toFixed();
+        localStats.fueraPercent = total==0 ? 0 : ((localStats.fuera/(total+localStats.fuera))*100).toFixed();
+
+       localStats.avgMtRightBalls =localStats.rightBalls==0 ? 0 : localStats.mtRightBalls/localStats.rightBalls;
+       localStats.avgMtLeftBalls =localStats.leftBalls==0 ? 0 : localStats.mtLeftBalls/localStats.leftBalls;
+       localStats.avgMtLongBalls =localStats.longBalls==0 ? 0 : localStats.mtLongBalls/localStats.longBalls;
+       localStats.avgMtShortBalls =localStats.shortBalls==0 ? 0 : localStats.mtShortBalls/localStats.shortBalls;
+
+       localStats.avgError= total==0 ? 0 : localStats.mtError/total;
+       if(test.metros==null || total==0 ){
+           localStats.avgDistancia=0;
+       }else{
+           localStats.avgDistancia=parseInt(test.metros) + (localStats.mtLongBalls-localStats.mtShortBalls)/total;
+       }
+
+
+
+        return localStats;
+    };
+
+
+
+   servicio.computeGlobalStatistics=function(tests){
+
+       var stats={
+           totales:{
+               total:0,
+               leftBalls:0,rightBalls:0,mtLeftBalls:0,mtRightBalls:0,
+               shortBalls:0,longBalls:0,mtShortBalls:0,mtLongBalls:0,
+               mtError:0,
+               goals:0,
+               fuera:0
+           },
+           hayParciales:0,
+           parciales:{}
+           };
+
+       angular.forEach(tests, function (value, key) {
+           var statTest=value["statistics"];
+           stats.totales={
+               total: (stats.totales["total"] | 0)+statTest["total"],
+               fuera: (stats.totales["fuera"] | 0)+statTest["fuera"],
+               goals: (stats.totales["goals"] | 0)+statTest["goals"],
+               mtError: (stats.totales["mtError"] | 0)+statTest["mtError"],
+               rightBalls: (stats.totales["rightBalls"] | 0) + statTest["rightBalls"],
+               leftBalls: (stats.totales["leftBalls"] | 0)+statTest["leftBalls"],
+               longBalls: (stats.totales["longBalls"] | 0)+statTest["longBalls"],
+               shortBalls: (stats.totales["shortBalls"] | 0)+statTest["shortBalls"],
+               mtRightBalls: (stats.totales["mtRightBalls"] | 0)+statTest["mtRightBalls"],
+               mtLeftBalls: (stats.totales["mtLeftBalls"] | 0)+statTest["mtLeftBalls"],
+               mtShortBalls: (stats.totales["mtShortBalls"] | 0)+statTest["mtShortBalls"],
+               mtLongBalls: (stats.totales["mtLongBalls"] | 0)+statTest["mtLongBalls"]
+           };
+           stats.parciales[value.palo]= stats.parciales[value.palo] || {};
+           stats.parciales[value.palo]={
+               total: (stats.parciales[value.palo]["total"] | 0)+statTest["total"],
+               fuera: (stats.parciales[value.palo]["fuera"] | 0)+statTest["fuera"],
+               goals: (stats.parciales[value.palo]["goals"] | 0)+statTest["goals"],
+               mtError: (stats.parciales[value.palo]["mtError"] | 0)+statTest["mtError"],
+               rightBalls: (stats.parciales[value.palo]["rightBalls"] | 0) + statTest["rightBalls"],
+               leftBalls: (stats.parciales[value.palo]["leftBalls"] | 0)+statTest["leftBalls"],
+               longBalls: (stats.parciales[value.palo]["longBalls"] | 0)+statTest["longBalls"],
+               shortBalls: (stats.parciales[value.palo]["shortBalls"] | 0)+statTest["shortBalls"],
+               mtRightBalls: (stats.parciales[value.palo]["mtRightBalls"] | 0)+statTest["mtRightBalls"],
+               mtLeftBalls: (stats.parciales[value.palo]["mtLeftBalls"] | 0)+statTest["mtLeftBalls"],
+               mtShortBalls: (stats.parciales[value.palo]["mtShortBalls"] | 0)+statTest["mtShortBalls"],
+               mtLongBalls: (stats.parciales[value.palo]["mtLongBalls"] | 0)+statTest["mtLongBalls"],
+               metrosBanderaSuma: (stats.parciales[value.palo]["metrosBanderaSuma"] | 0)+parseInt(value.metros),
+               numTestConEstePalo: (stats.parciales[value.palo]["numTestConEstePalo"] | 0)+1
+           };
+       });
+
+       stats.totales["rightBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["rightBalls"]*100/stats.totales["total"]).toFixed();
+       stats.totales["leftBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["leftBalls"]*100/stats.totales["total"]).toFixed();
+       stats.totales["longBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["longBalls"]*100/stats.totales["total"]).toFixed();
+       stats.totales["shortBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["shortBalls"]*100/stats.totales["total"]).toFixed();
+       stats.totales["fueraPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["fuera"]*100/(stats.totales["total"]+stats.totales["fuera"])).toFixed();
+
+       stats.totales.avgMtRightBalls =stats.totales.rightBalls==0 ? 0 : stats.totales.mtRightBalls/stats.totales.rightBalls;
+       stats.totales.avgMtLeftBalls =stats.totales.leftBalls==0 ? 0 : stats.totales.mtLeftBalls/stats.totales.leftBalls;
+       stats.totales.avgMtLongBalls =stats.totales.longBalls==0 ? 0 : stats.totales.mtLongBalls/stats.totales.longBalls;
+       stats.totales.avgMtShortBalls =stats.totales.shortBalls==0 ? 0 : stats.totales.mtShortBalls/stats.totales.shortBalls;
+
+       stats.totales["avgError"] = stats.totales["total"] == 0 ? 0 : stats.totales["mtError"] / stats.totales["total"]
+
+       angular.forEach(stats.parciales, function (value, key) {
+           stats.parciales[key]["rightBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["rightBalls"]*100/stats.parciales[key]["total"]).toFixed();
+           stats.parciales[key]["leftBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["leftBalls"]*100/stats.parciales[key]["total"]).toFixed();
+           stats.parciales[key]["longBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["longBalls"]*100/stats.parciales[key]["total"]).toFixed();
+           stats.parciales[key]["shortBallsPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["shortBalls"]*100/stats.parciales[key]["total"]).toFixed();
+           stats.parciales[key]["fueraPercent"]=(stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["fuera"]*100/(stats.parciales[key]["total"]+stats.parciales[key]["fuera"])).toFixed();
+
+           stats.parciales[key].avgMtRightBalls =stats.parciales[key].rightBalls==0 ? 0 : stats.parciales[key].mtRightBalls/stats.parciales[key].rightBalls;
+           stats.parciales[key].avgMtLeftBalls =stats.parciales[key].leftBalls==0 ? 0 : stats.parciales[key].mtLeftBalls/stats.parciales[key].leftBalls;
+           stats.parciales[key].avgMtLongBalls =stats.parciales[key].longBalls==0 ? 0 : stats.parciales[key].mtLongBalls/stats.parciales[key].longBalls;
+           stats.parciales[key].avgMtShortBalls =stats.parciales[key].shortBalls==0 ? 0 : stats.parciales[key].mtShortBalls/stats.parciales[key].shortBalls;
+
+           stats.parciales[key]["avgError"]= stats.parciales[key]["total"]==0 ? 0 : stats.parciales[key]["mtError"] / stats.parciales[key]["total"];
+
+           //PAra calcular distancia hay que calcular metros medios
+           var metrosMedia= stats.parciales[key]["numTestConEstePalo"]==0 ? 0 : stats.parciales[key]["metrosBanderaSuma"] / stats.parciales[key]["numTestConEstePalo"];
+           if(metrosMedia==0 || stats.parciales[key]["total"]==0 ){
+               stats.parciales[key].avgDistancia=0;
+           }else{
+               stats.parciales[key].avgDistancia=parseInt(metrosMedia) + (stats.parciales[key].mtLongBalls-stats.parciales[key].mtShortBalls)/stats.parciales[key]["total"];
+           }
+       });
+
+       if (!angular.equals(stats.parciales,{})){
+           stats.hayParciales = 1;
+       }
+       return stats;
+   }
+
+
+
+    servicio.cellFunc={
+
+        isCenter:function (data,fil,col) {
+            var centro=Math.floor(data.length/2);
+            return fil==centro && col==centro ?  true :  false;
+        },
+        isOut:function (data,fil,col) {
+            var lim=data.length -1;
+           return  fil == 0 || fil == lim || col == 0 || col == lim;
+        },
+        isZero:function (data,r, c) {
+            if (data[r][c] == 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        },
+        checkBorder: function(data, fila, columna){
+            var valor = 0;
+            var centro=Math.floor(data.length/ 2),
+                difFilas = fila - centro,
+                difColumnas = columna - centro;
+
+            if (difFilas==-2 && difColumnas==-2) {
+                valor = 1;
+            }else if (difFilas==-2 && difColumnas>-2 && difColumnas<2){
+                valor = 2;
+            }else if (difFilas==-2 && difColumnas==2) {
+                valor = 3;
+            }else if (difColumnas==2 && difFilas>-2 && difFilas<2){
+                valor = 4;
+            }else if (difFilas==2 && difColumnas==2) {
+                valor = 5;
+            }else if (difFilas==2 && difColumnas>-2 && difColumnas<2){
+                valor = 6;
+            }else if (difFilas==2 && difColumnas==-2) {
+                valor = 7;
+            }else if (difColumnas==-2 && difFilas>-2 && difFilas<2){
+                valor = 8;
+            }
+
+            return valor;
+        }
+    }
 
     return servicio;
 });

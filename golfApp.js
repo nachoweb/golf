@@ -79,30 +79,8 @@ app.get('/logout', function(req, res){
 })
 
 app.get('/cache.manifest', function(req, res){
-    console.log('Petición %s , url: %s', req.method,  req.url);
     res.header("Content-Type", "text/cache-manifest");
-//    res.end("CACHE MANIFEST");
-
-    var manifest = 'CACHE MANIFEST\n'+
-        '# rev 4\n' +
-    'css/app.css\n' +
-    'css/bootstrap.css\n'+
-    'img/flag21x21.png\n'+
-    'img/favicon.ico\n'+
-    'img/home.png\n'+
-    'img/golfista.PNG\n'+
-    'img/grassTexture.jpg\n'+
-    'js/controllers.js\n' +
-    'js/routes.js\n'   +
-    'js/services.js\n' +
-    'lib/angular/angular.js\n'  +
-    'lib/angular/angular-resource.min.js\n' +
-    'partials/board.html\n'+
-    'partials/tests.html\n' +
-    'partials/welcome.html\n' +
-    'img/glyphicons-halflings.png\n' +
-     'img/glyphicons-halflings-white.png\n';
-    res.end(manifest);
+    res.sendfile('cache.manifest');
 });
 
 
