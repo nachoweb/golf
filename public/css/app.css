@@ -39,11 +39,12 @@ a:hover {
     border-radius: 25px 6px 6px 6px;
     margin:0;
     padding: 15px;
-    text-align: center;
+    /*text-align: center;*/
     margin-bottom: 10px;}
 
 #listaTests{
     margin: 10px;
+    padding: 0;
     height: 200px;
     overflow: auto;
     text-align:left;}
@@ -218,9 +219,6 @@ table.tablaEstadisticas.parciales td.tipoPalo{
     font-variant: small-caps;
     position: absolute;}
 
-.ocultar{
-    display:none;
-}
     /* FIN clases útiles */
 
 

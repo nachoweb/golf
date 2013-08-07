@@ -1,23 +1,26 @@
 
     <!-- Left container (Side Bar) -->
-    <div id="sidebar" ng-hide="isError" ng-class="{ocultar:pantallaCompleta}">
+    <div id="sidebar" ng-hide="isError" ng-hide="pantallaCompleta">
 
         <!-- Test Table -->
-        <input id="input_buscar" style="width: 86%;" ng-model="query" class="search-query" placeholder="Buscar ...">
+        <input id="input_buscar" style="width: 100%;margin-top:10px;" ng-model="query" class="search-query" placeholder="Buscar ...">
         <ul id="listaTests">
             <li ng-repeat="(index, test) in data | filter:query" class="test">
                 <a ng-href="#/test/{{test._id}}"
                    ng-class="{testNoTerminado:noTerminado(test._id)}">
                     {{test.name}} ({{ test.palo }} {{ test.metros }}<span ng-hide="test.metros==null">m</span> {{dateFormat(test.fecha,true)}})
                 </a>
-                <i ng-show="test._id == getIdActivo()" class="icon-eye-open icon-black"></i>
+                <i ng-show="test._id == getIdActivo()" class="glyphicon-eye-open glyphicon glyphicon-black"></i>
             </li>
         </ul>
-
-        <a ng-click="nuevoTest()">
-            <button class="btn btn-primary btn-large">
-                <i class="icon-plus icon-white"></i>
-                Crear Nuevo Test
-            </button>
-        </a>
+        <div>
+                <button class="btn btn-primary" ng-click="nuevoTest()">
+                    <i class="glyphicon-plus glyphicon glyphicon-white"></i>
+                    Crear Nuevo Test
+                </button>
+                <!--<button class="btn btn-danger" ng-click="sincServer()">-->
+                    <!--<i class="glyphicon-white glyphicon glyphicon-resize-vertical"></i>-->
+                    <!--Sincronizar con servidor-->
+                <!--</button>-->
+        </div>
     </div>

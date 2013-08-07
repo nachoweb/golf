@@ -4,12 +4,19 @@ head
     meta(charset='utf-8')
     title Golf App
     style.
-        #login form{ margin-top:100px; padding:50px;border:2px solid lightgray;}
-    link(rel='stylesheet', href='css/bootstrap.css')
+        #login form{ margin-top:10px; padding:50px;border:2px solid lightgray;}
+        #logo{ margin-top:20px; }
+    link(rel='stylesheet', href='css/bootstrap.min.css')
+    link(rel='stylesheet', href='css/bootstrap-glyphicons.css')
     body#login
-        .row-fluid
-            .span4
-            .zone.span4
+        .row
+            .col-lg-4
+            .col-lg-4
+                a(href="http://www.misdconsulting.com"): img#logo(src="img/misdlogo.png",style="width:100%")
+            .col-lg-4
+        .row
+            .col-lg-4
+            .zone.col-lg-4
                 form(action='login',method='post')
                     h4(style="color:red;margin-bottom:10px;") #{error_msg}
                     table#login_table
@@ -19,7 +26,7 @@ head
                         tr
                             td Contraseña
                             td: input(name='password',type='password',value='',placeholder='')
-                    input.pull-right(type='submit',value='Entrar',data-transition='fade', class="btn-large")
+                    input.pull-right(type='submit',value='Entrar',data-transition='fade', class="btn")
                        | Entrar
-                       i.icon-chevron-right.icon-white
-            .span4
+                       i.glyphicon.glyphicon-chevron-right.glyphicon-white
+            .col-lg-4

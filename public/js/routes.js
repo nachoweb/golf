@@ -4,7 +4,7 @@
 App Module 
 The module define the routes and the service
 */
-var app=angular.module('golfModule', ['servMod','ctrlMod']);
+var app=angular.module('golfModule', ['servMod','ctrlMod','directivesMod']);
 
 app.config(['$routeProvider', function($routeProvider){
   $routeProvider.

@@ -1,31 +1,44 @@
 !!! 5
-html(lang='en', ng-app='golfModule', manifest='cache.manifest')
-    //html(lang='en', ng-app='golfModule')
+//html(lang='en', ng-app='golfModule', manifest='cache.manifest')
+html(lang='en', ng-app='golfModule')
 
     head
         meta(charset='utf-8')
         meta(name='viewport', content='width=device-width', initial-scale=1.0)
         title Golf App
-        link(href='css/bootstrap.css', rel='stylesheet')
-        link(href='css/bootstrap-responsive.min.css', rel='stylesheet')
+        link(href='css/bootstrap.min.css', rel='stylesheet')
+        link(href='css/bootstrap-glyphicons.css', rel='stylesheet')
         link(rel="shortcut icon",href="img/favicon.ico")
         link(rel='stylesheet', href='css/app.css')
 
         script(type='text/javascript').
-            GolfApp={};
-            GolfApp.username= "#{username}";
+            golfApp={};
+            golfApp.user= "#{username}";
+            golfApp.server= "";
+        script(src='lib/jquery-2.0.3.min.js')
+        script(src='lib/bootstrap.min.js')
         script(src='lib/angular/angular.min.js')
         script(src='js/controllers.js')
         script(src='js/routes.js')
         script(src='js/services.js')
+        script(src='js/directives.js')
     body#cuerpo(ng-controller='MainControl')
-        #cabeceraTitulo(ng-class="{ocultar:pantallaCompleta}")
+        #cabeceraTitulo(ng-hide="pantallaCompleta")
             a#home(href='#')
                 img(src='./img/home.png', style='position: absolute; width: 35px; top: 0px; left: 20px;')
             div
                 span {{ username }}
                 a(ng-href="logout")
-                    i.icon-off
-                    | Cerrar sesión
+                    i.glyphicon.glyphicon-off
+                    |   Cerrar sesión
             p  Aplicación web para golfistas profesionales
+        div(alertas="alertas")
         div(ng-view='ng-view')
+        script.
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-42799937-1', 'misdserver.com');
+            ga('send', 'pageview');

@@ -1,7 +1,7 @@
-<div class="row-fluid">
-    <div ng-include src="'partials/tests.html'"  ng-class="{span3: !pantallaCompleta, ocultar:pantallaCompleta}"></div>
+<div class="row">
+    <div ng-include src="'partials/tests.html'" class="col-lg-3"  ng-hide="pantallaCompleta"></div>
 
-    <div class="span9">
+    <div ng-class="{'col-lg-9':!pantallaCompleta,'col-lg-12':pantallaCompleta}">
 
         <div ng-show="isError">
             <p>No se han encontrado datos para este test </p>
@@ -9,7 +9,7 @@
         </div>
 
         <div ng-hide="isError">
-            <div ng-class="{zona: true, ocultar: pantallaCompleta}">
+            <div class="zona row" ng-hide="pantallaCompleta">
                 <h3 id="nombreTest">{{ data[numTest].name }} ({{ palos[data[numTest].palo] }} {{ data[numTest].metros }}<span ng-hide="data[numTest].metros==null">m</span> {{
                     dateFormat(data[numTest].fecha,false) }})</h3>
                 <table class="tablaEstadisticas">
@@ -26,7 +26,7 @@
                     </tr>
                     <tr>
                         <td class="golpesTotales"> {{statistics.total}}</td>
-                        <td> {{ statistics.avgDistancia.toFixed(1) }} m</td>
+                        <td> {{ statistics.avgDistancia }} m</td>
                         <td> {{ statistics.avgError.toFixed(1)}}m</td>
                         <td> {{ statistics.avgMtLeftBalls.toFixed(1)}}m <br>{{ statistics.leftBalls }} ({{statistics.leftBallsPercent}}%)</td>
                         <td> {{ statistics.avgMtRightBalls.toFixed(1)}}m <br>{{ statistics.rightBalls }} ({{statistics.rightBallsPercent}}%)</td>
@@ -39,7 +39,7 @@
             </div>
 
             <!-- Datos del test -->
-            <div class="row-fluid zona" ng-class="{ocultar:pantallaCompleta}">
+            <div class="row zona" ng-hide="pantallaCompleta">
                 <div style="text-align: center;">
                     <input type="text" ng-model="data[numTest].name" ng-disabled="!noTerminado(data[numTest]._id)"
                            class="input-medium campo" placeholder="Nombre"/>
@@ -58,33 +58,25 @@
             </div>
 
 
-            <div class="zona row-fluid">
+            <div class="zona row">
                     <div style="text-align: center;">
-                        <a ng-click="terminarTestActual(numTest)">
-                            <button class="btn btn-primary btn-large" ng-disabled="!noTerminado(data[numTest]._id)">
-                                <i class="icon-ok icon-white"></i>
+                            <button class="btn btn-primary" ng-disabled="!noTerminado(data[numTest]._id)" ng-click="terminarTestActual(numTest)">
+                                <i class="glyphicon glyphicon-ok glyphicon-white"></i>
                                 Terminar el Test
                             </button>
-                        </a>
 
-                        <a ng-click="guardarCambios(numTest)">
-                            <button class="btn btn-primary btn-large" ng-disabled="!hayCambios(numTest)">
-                                <i class="icon-briefcase icon-white"></i>
+                            <button class="btn btn-primary" ng-disabled="!hayCambios(numTest)" ng-click="guardarCambios(numTest)">
+                                <i class="glyphicon glyphicon-briefcase glyphicon-white"></i>
                                 Guardar Cambios
                             </button>
-                        </a>
 
-                        <a ng-click="borrar(numTest)">
-                            <button class="btn btn-primary btn-large">
-                                <i class="icon-trash icon-white"></i>
+                            <button class="btn btn-primary" ng-click="borrar(numTest)">
+                                <i class="glyphicon glyphicon-trash glyphicon-white"></i>
                                 Eliminar Test
                             </button>
-                        </a>
-                        <a ng-click="cambiarPantallaCompleta()">
-                            <button class="btn btn-primary btn-large">
-                                <i class="icon-fullscreen icon-white"></i>
+                            <button class="btn btn-primary" ng-click="cambiarPantallaCompleta()">
+                                <i class="glyphicon glyphicon-white" ng-class="{'glyphicon-zoom-in':!pantallaCompleta,'glyphicon-zoom-out':pantallaCompleta}"></i>
                             </button>
-                        </a>
                     </div>
 
                     <!-- Board Container -->

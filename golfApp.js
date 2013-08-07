@@ -60,7 +60,7 @@ app.post('/login', function (req, res) {
             if(err){throw err;}
             if (result){
                 req.session.username = req.body.username;
-                console.log("Sesion creada. username: " + req.session.username);
+//                console.log("Sesion creada. username: " + req.session.username);
                 app.set("error_msg", "");
                 res.redirect('/');
             } else {
@@ -83,6 +83,51 @@ app.get('/cache.manifest', function(req, res){
     res.sendfile('cache.manifest');
 });
 
+app.post('/sinc',function (req,res) {
+    if(!req.session.username){
+        res.redirect('/login');
+    } else{
+      var datos=req.body;
+      conectaDB(function (db) {
+          var haTerminado=function() {
+              procesados--;
+              if(procesados==0){
+                  db.collection('entrenamientos').find({"user":req.session.username}).toArray(function (err,results) {
+                      if(err) console.log(err);
+                      res.json(results);
+                      db.close();
+
+                  });
+              }
+          }
+
+
+          var len=datos.length,procesados=len;
+          if(len==0){procesados=1;haTerminado();}
+          _.each(datos,function (v,k) {
+              if(v.user != req.session.username){
+                 haTerminado();
+                 return;
+              }
+              if(v.borrar){
+                  db.collection('entrenamientos').remove({user:req.session.username,'_id': v["_id"]},true,function (a) {console.log(a);
+                      haTerminado();});
+              }else{
+                  db.collection('entrenamientos').save(v,function (a) {console.log(a);
+                      haTerminado();});
+              }
+
+          });
+
+
+
+
+      });
+
+
+
+    }
+});
 
 
 console.log("Servidor iniciado en puerto "+app.get("port"))

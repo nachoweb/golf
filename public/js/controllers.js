@@ -13,6 +13,10 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         $scope.dataServer=[];
         $scope.pantallaCompleta = false;
 
+        $scope.setAlertas=function (type,mess) {
+          $scope.alertas={type:type,mess:mess};
+        }
+
         $scope.palos = {
             'M1': 'Driver',
             'M3': 'Madera 3',
@@ -43,7 +47,7 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
             var m = date.getMonth() + 1;
             var y = date.getFullYear();
 
-            var time=date.getHours()+":"+date.getMinutes();
+            var time=date.getHours()+":"+("0"+ date.getMinutes()).slice(-2);
             var res=d+"-"+m+"-"+y;
             if(isDateTime){
                 res=res+" "+time;
@@ -52,13 +56,13 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
         }
 
         storage.query(function (data) {
+//            console.log(data);
             $scope.data=data; //$scope.data será una referencia a storage.data
             $scope.dataServer=angular.copy(data);
 
         });
 
-
-        console.log("Nombre de usuario: ", window.GolfApp.username);
+//        console.log("Nombre de usuario: ", window.GolfApp.user);
 
         $scope.isError=false;
         $scope.setIsError=function(isError){
@@ -73,10 +77,10 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
             calculosBoard.idActivo = 0;
         }
 
-        $scope.username = window.GolfApp.username;
+        $scope.username = window.golfApp.user;
 
         // Comprobar si la máquina tiene una sesión activa con el servidor
-        console.log("Comprobar si tengo sesión activa en el servidor ...")
+//        console.log("Comprobar si tengo sesión activa en el servidor ...")
 
         $scope.noTerminado = function(id){
             var index = calculosBoard.findTestById($scope.data,id);
@@ -108,6 +112,21 @@ ctrlMod.controller('MainControl', ['$scope', 'storage', '$location','calculosBoa
             }else{
                 $scope.pantallaCompleta = true;
             }
+        }
+    
+        $scope.sincServer=function () {
+            storage.sinc(function (data) {
+                if(!data){
+                    $scope.setAlertas("danger","error al sincronizar con el servidor");
+                }else{
+                    $scope.setAlertas("success","datos sincronizados")
+                    $scope.data=data;
+                    $scope.dataServer=angular.copy(data);
+                    storage.setData(data);
+                    $location.path("/");
+                }
+            });
+
         }
     }
 ]);
@@ -164,7 +183,7 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
                 console.log("Error actualizando test");
             } else {
                 $scope.dataServer[numTest] = angular.copy($scope.data[numTest]);
-                console.log('Test actualizado en el servidor');
+//                console.log('Test actualizado en el servidor');
             }
         });
 
@@ -176,18 +195,17 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
     $scope.borrar = function (numTest) {
         if (confirm("¿Está seguro de que desea borrar el test?")) {
 
-            console.log("Test a eliminar: " + $scope.data[numTest])
-
-            // Eliminar del servidor
-            storage.remove($scope.data[numTest], function (data) {
-                if (!data.err) {
-                    $scope.dataServer.splice(data.index, 1);
-                    // No consigo que se ejecute
-                    console.log('Test eliminado del servidor');
-                    $location.path('/test');
-                } else {
-                    console.log("Error al eliminar test");
+//            console.log("Test a eliminar: " + $scope.data[numTest])
+            $scope.data[numTest].borrar=true;
+            storage.update($scope.data[numTest],function (data) {
+                if(!data.err){
+                    $scope.data.splice(numTest,1);
+                    $scope.dataServer.splice(numTest,1);
+                   $location.path('/test');
+                }else{
+                    console.log("Error borrando el test");
                 }
+              
             });
         }
     }
@@ -199,7 +217,7 @@ ctrlMod.controller('BoardControl', ['$scope', '$routeParams', '$location', 'stor
             $scope.data[numTest].estado = 'terminado';
             storage.update($scope.data[numTest], function (data) {
                 if (!data.err) {
-                    console.log('Test actualizado en el servidor:');
+//                    console.log('Test actualizado en el servidor:');
                     $scope.dataServer[data.index] = angular.copy($scope.data[data.index]);
                 } else {
                     console.log("Error al terminar test");

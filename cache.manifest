@@ -1,21 +1,28 @@
 CACHE MANIFEST
 
-# rev 7
+# rev 8
 
 css/app.css
-css/bootstrap.css
-css/bootstrap-responsive.min.css
+css/bootstrap.min.css
+css/bootstrap-glyphicons.css
 img/flag21x21.png
 img/favicon.ico
 img/home.png
 img/golfista.PNG
 img/grassTexture.jpg
-img/glyphicons-halflings.png
-img/glyphicons-halflings-white.png
+img/misdlogo.png
 js/controllers.js
 js/routes.js
 js/services.js
+js/directives.js
 lib/angular/angular.min.js
+lib/bootstrap.min.js
+lib/jquery-2.0.3.min.js
 partials/board.html
 partials/tests.html
 partials/welcome.html
+fonts/glyphiconshalflings-regular.eot
+fonts/glyphiconshalflings-regular.otf
+fonts/glyphiconshalflings-regular.svg
+fonts/glyphiconshalflings-regular.ttf
+fonts/glyphiconshalflings-regular.woff

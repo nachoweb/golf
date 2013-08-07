@@ -23,24 +23,41 @@ function getIndexById(datos,id){
 /**
  * Servicio de almacenamiento local
  */
-serv.factory('storage', function() {
+serv.factory('storage',['$http', function($http) {
     var storage={};
 
     function getData() { return JSON.parse(localStorage.getItem("datosGolf")); }
-    function setData(data) {return localStorage.setItem('datosGolf',JSON.stringify(data)); }
+    function setData(data) {
+        var datosAGuardar=[],datosLocal=getData();
+        angular.forEach(datosLocal, function (v, k) {
+            if(v.user!=window.golfApp.user){
+                datosAGuardar.push(v);
+            }
+        });
+        datosAGuardar=datosAGuardar.concat(data);
+        return localStorage.setItem('datosGolf',JSON.stringify(datosAGuardar));
+    }
 
     storage.data = []; //Conjunto de tests
 
     /**
-     * Extraer todos los test del local storage
+     * Extraer todos los test del local storage menos los borrados (test.borrado=true)
      * @param cb Callback
      */
     storage.query = function(cb){
-        storage.data=getData();
-        if(!storage.data){
+        var datos=getData(),datosFinal=[];
+        if(!datos){
             storage.data=[];
             setData([]);
+            cb([])
+            return
         }
+        angular.forEach(datos, function (v, k) {
+            if(!v.borrar && v.user==window.golfApp.user){
+                datosFinal.push(v);
+            }
+        });
+        storage.data=datosFinal;
        cb(storage.data);
     }
 
@@ -65,9 +82,11 @@ serv.factory('storage', function() {
             name : 'Nuevo test '+indiceNuevoTest,
             data : m,
             fecha : new Date(),
+            timestamp: date.getTime(),
             estado : 'no terminado',
             palo: null,
             metros:null,
+            user: golfApp.user,
             metrosUnidad:0.5,
             statistics:null
         };
@@ -89,6 +108,7 @@ serv.factory('storage', function() {
         var arrLocalStorage=getData();
         var index=getIndexById(arrLocalStorage,newData._id);
         if(index!=-1){
+            newData.timestamp=new Date().getTime();
             arrLocalStorage[index]=newData;
             setData(arrLocalStorage);
             cb({err:false,index:index});
@@ -98,30 +118,33 @@ serv.factory('storage', function() {
         }
     }
 
+    storage.setData=setData;
 
-    /**
-     * Borrar un test del local storage.
-     * Pone marcas para la correcta sincronización con el servidor posteriormente.
-     * @param newData Test a borrar
-     * @param cb Callback
-     */
-    storage.remove = function(testToRemove, cb){
-        console.log("update")
-        var arrayTest=getData();
-        var index=getIndexById(arrayTest,testToRemove._id);
-        if(index!=-1){
-           arrayTest.splice(index,1);
-           storage.data.splice(index,1);
-           setData(arrayTest);
-           cb({err:false,index:index});
-        }else{
-            console.log("No se encuentra el test para borrar");
-            cb({err:true});
+
+    storage.sinc=function (cb) {
+        if(confirm("Seguro que quiere sincronizar con el servidor?")){
+            var datosAEnviar=[],datosLocal=getData();
+            angular.forEach(datosLocal, function (v, k) {
+                if(window.golfApp.user!= v.user){
+                   return;
+                }
+                if(v.borrar){
+                    datosAEnviar.push({_id: v._id,borrar:true});
+                }else{
+                    datosAEnviar.push(v);
+                }
+            });
+            $http.post('/sinc',datosAEnviar).success(function (data) {
+                cb(data);
+            }).error(function () {
+                cb();
+            });
         }
+
     }
 
     return storage;
-});
+}]);
 
 
 serv.factory('calculosBoard',function () {
@@ -220,10 +243,11 @@ serv.factory('calculosBoard',function () {
        localStats.avgMtShortBalls =localStats.shortBalls==0 ? 0 : localStats.mtShortBalls/localStats.shortBalls;
 
        localStats.avgError= total==0 ? 0 : localStats.mtError/total;
-       if(test.metros==null || total==0 ){
-           localStats.avgDistancia=0;
+       if(test.metros==null || test.metros=="" || total==0 || isNaN(test.metros)){
+           localStats.avgDistancia='?';
        }else{
            localStats.avgDistancia=parseInt(test.metros) + (localStats.mtLongBalls-localStats.mtShortBalls)/total;
+           localStats.avgDistancia=localStats.avgDistancia.toFixed(1);
        }
 
 
@@ -250,22 +274,23 @@ serv.factory('calculosBoard',function () {
 
        angular.forEach(tests, function (value, key) {
            var statTest=value["statistics"];
-           stats.totales={
-               total: (stats.totales["total"] | 0)+statTest["total"],
-               fuera: (stats.totales["fuera"] | 0)+statTest["fuera"],
-               goals: (stats.totales["goals"] | 0)+statTest["goals"],
-               mtError: (stats.totales["mtError"] | 0)+statTest["mtError"],
-               rightBalls: (stats.totales["rightBalls"] | 0) + statTest["rightBalls"],
-               leftBalls: (stats.totales["leftBalls"] | 0)+statTest["leftBalls"],
-               longBalls: (stats.totales["longBalls"] | 0)+statTest["longBalls"],
-               shortBalls: (stats.totales["shortBalls"] | 0)+statTest["shortBalls"],
-               mtRightBalls: (stats.totales["mtRightBalls"] | 0)+statTest["mtRightBalls"],
-               mtLeftBalls: (stats.totales["mtLeftBalls"] | 0)+statTest["mtLeftBalls"],
-               mtShortBalls: (stats.totales["mtShortBalls"] | 0)+statTest["mtShortBalls"],
-               mtLongBalls: (stats.totales["mtLongBalls"] | 0)+statTest["mtLongBalls"]
-           };
-           stats.parciales[value.palo]= stats.parciales[value.palo] || {};
-           stats.parciales[value.palo]={
+           if(statTest!=null){
+               stats.totales={
+                   total: (stats.totales["total"] | 0)+statTest["total"],
+                   fuera: (stats.totales["fuera"] | 0)+statTest["fuera"],
+                   goals: (stats.totales["goals"] | 0)+statTest["goals"],
+                   mtError: (stats.totales["mtError"] | 0)+statTest["mtError"],
+                   rightBalls: (stats.totales["rightBalls"] | 0) + statTest["rightBalls"],
+                   leftBalls: (stats.totales["leftBalls"] | 0)+statTest["leftBalls"],
+                   longBalls: (stats.totales["longBalls"] | 0)+statTest["longBalls"],
+                   shortBalls: (stats.totales["shortBalls"] | 0)+statTest["shortBalls"],
+                   mtRightBalls: (stats.totales["mtRightBalls"] | 0)+statTest["mtRightBalls"],
+                   mtLeftBalls: (stats.totales["mtLeftBalls"] | 0)+statTest["mtLeftBalls"],
+                   mtShortBalls: (stats.totales["mtShortBalls"] | 0)+statTest["mtShortBalls"],
+                   mtLongBalls: (stats.totales["mtLongBalls"] | 0)+statTest["mtLongBalls"]
+               };
+               stats.parciales[value.palo]= stats.parciales[value.palo] || {};
+               stats.parciales[value.palo]={
                total: (stats.parciales[value.palo]["total"] | 0)+statTest["total"],
                fuera: (stats.parciales[value.palo]["fuera"] | 0)+statTest["fuera"],
                goals: (stats.parciales[value.palo]["goals"] | 0)+statTest["goals"],
@@ -281,6 +306,8 @@ serv.factory('calculosBoard',function () {
                metrosBanderaSuma: (stats.parciales[value.palo]["metrosBanderaSuma"] | 0)+parseInt(value.metros),
                numTestConEstePalo: (stats.parciales[value.palo]["numTestConEstePalo"] | 0)+1
            };
+           }
+
        });
 
        stats.totales["rightBallsPercent"]=(stats.totales["total"]==0 ? 0 : stats.totales["rightBalls"]*100/stats.totales["total"]).toFixed();
@@ -312,10 +339,11 @@ serv.factory('calculosBoard',function () {
 
            //PAra calcular distancia hay que calcular metros medios
            var metrosMedia= stats.parciales[key]["numTestConEstePalo"]==0 ? 0 : stats.parciales[key]["metrosBanderaSuma"] / stats.parciales[key]["numTestConEstePalo"];
-           if(metrosMedia==0 || stats.parciales[key]["total"]==0 ){
-               stats.parciales[key].avgDistancia=0;
+           if(metrosMedia==0 || stats.parciales[key]["total"]==0 || isNaN(metrosMedia)){
+               stats.parciales[key].avgDistancia='?';
            }else{
                stats.parciales[key].avgDistancia=parseInt(metrosMedia) + (stats.parciales[key].mtLongBalls-stats.parciales[key].mtShortBalls)/stats.parciales[key]["total"];
+               stats.parciales[key].avgDistancia=stats.parciales[key].avgDistancia.toFixed(1);
            }
        });
 
