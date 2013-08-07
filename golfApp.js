@@ -2,6 +2,7 @@
 var mongoClient = require('mongodb').MongoClient,
     express = require('express'),
     _=require('underscore'),
+    fs=require('fs'),
     app = express();
 
 
@@ -22,7 +23,7 @@ app.configure(function(){
     // MIDDLEWARE
     app.use(express.static(__dirname+'/public'));
     app.use(express.bodyParser());
-    app.use(express.cookieParser("3216545sec6eg65ds654"));
+    app.use(express.cookieParser());
     app.use(express.cookieSession({secret:"sd2c1as65rg54rg6s5fd"}));
 
 })
@@ -75,7 +76,19 @@ app.post('/login', function (req, res) {
 app.get('/logout', function(req, res){
     req.session = null;
     app.set('error_msg', "");
-    res.redirect('/login');
+    fs.readFile('cache.manifest',function (err,data) {
+        var dataString=data.toString(),
+            timestamp = new Date().getTime();
+        if (err) { console.log(err); }
+        else{
+            dataString=dataString.replace(/# timestamp.+/,"# timestamp "+timestamp);
+            fs.writeFile('cache.manifest',dataString,function (err) {
+              if(err) throw err;
+              res.redirect('/login');
+
+            })
+        }
+    });
 })
 
 app.get('/cache.manifest', function(req, res){
